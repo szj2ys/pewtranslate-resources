@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A practical Python tutorial for reviewing named placeholder counts, with synthetic examples, a complete checker, and its limits.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Preserve named placeholders when localizing interface text | PewTranslate</title>
+<style>:root { color-scheme: light; --ink: #183329; --muted: #4b6257; --accent: #17613d; --line: #ccd9cf; }
+* { box-sizing: border-box; }
+html { scroll-padding-top: 24px; background: #f5f8f5; }
+body { margin: 0; color: var(--ink); font: 18px/1.7 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+a { color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+a:hover { text-decoration-thickness: 3px; }
+a:focus-visible, pre:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+.skip-link { position: absolute; top: -90px; left: 16px; padding: 12px 16px; background: white; z-index: 1; }
+.skip-link:focus { top: 12px; }
+.page { max-width: 880px; margin: 0 auto; padding: 48px 36px 64px; }
+header { padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.site-title { margin: 0 0 18px; font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { max-width: 770px; margin: 0; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.13; letter-spacing: -.035em; font-weight: 750; }
+h2 { margin: 0 0 16px; font-size: 1.45rem; line-height: 1.3; letter-spacing: -.015em; }
+section { padding: 34px 0; border-bottom: 1px solid var(--line); }
+section:last-child { padding-bottom: 0; border-bottom: 0; }
+p { margin: 0 0 20px; }
+p:last-child { margin-bottom: 0; }
+.original-prose { overflow-wrap: break-word; }
+.references { margin: 20px 0 0; padding-left: 24px; font-size: 16px; }
+.references li + li { margin-top: 8px; }
+.code-toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; margin: 28px 0 8px; font-size: 15px; font-weight: 650; }
+.copy-note { margin-bottom: 12px; font-size: 14px; color: var(--muted); }
+pre { margin: 0; padding: 20px; border: 1px solid #bdcfc1; border-radius: 10px; background: #fff; font: 16px/1.5 Consolas, "Liberation Mono", monospace; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; user-select: all; -webkit-user-select: all; }
+code { font: inherit; }
+::selection { color: #102b20; background: #bde8c9; }
+@media (max-width: 540px) { .page { padding: 28px 20px 44px; } body { font-size: 17px; line-height: 1.65; } header { padding-bottom: 28px; } section { padding: 28px 0; } h2 { font-size: 1.35rem; } pre { padding: 14px 12px; border-radius: 8px; } }
+@media print { html { background: white; } .page { max-width: none; padding: 0; } .skip-link, .code-toolbar, .copy-note { display: none; } h1 { font-size: 28pt; } h2 { break-after: avoid; } pre { border-color: #999; font-size: 10pt; } a { color: inherit; } }</style>
+</head>
+<body>
+<a class="skip-link" href="#tutorial">Skip to tutorial</a>
+<div class="page">
+<header><p class="site-title">Placeholder Review Guide</p><h1>Preserve named placeholders when localizing interface text</h1></header>
+<main id="tutorial">
+<section aria-labelledby="section-1">
+<h2 id="section-1">Start with a small contract</h2>
+<p class="original-prose">A localized interface string may carry values supplied later by the application: a person&#x27;s name, a room, or a date. Changing a placeholder can hide a value or break rendering. This tutorial teaches one narrow review step: compare named placeholder occurrences before testing the final wording in its application.</p>
+<p class="original-prose">Every example below is synthetic English. The candidate strings are deliberate rephrases, not translations or reports of production use. Even the first matching example changes the message&#x27;s meaning. That is intentional: equal token counts cannot establish that a sentence says the right thing.</p>
+<p class="original-prose">First ask the application owner which fields are required, which can repeat, and what values they receive. Keep that contract beside both original strings. A source string is evidence to inspect, not an infallible specification.</p>
+</section>
+<section aria-labelledby="section-2">
+<h2 id="section-2">Define the supported grammar</h2>
+<p class="original-prose">This checker accepts only named fields such as {person} and {room}. Names use ASCII letters or underscores first, followed by ASCII letters, digits, or underscores. They are case-sensitive. Double braces {{ and }} represent literal braces; {{person}} is literal text, not a field. Ordinary text may otherwise contain Unicode characters.</p>
+<p class="original-prose">Positional fields, attribute or index access, conversions, every explicit format specification (including an empty colon), nested fields, and ICU plural syntax are rejected. Percent and dollar template syntaxes are outside scope. To avoid guessing, this small checker rejects every % and $ character, including literal percentages and currency symbols. Such rejection does not mean the original text is invalid. Route it to a checker for the application&#x27;s actual format.</p>
+<p class="original-prose">Python&#x27;s parser identifies fields and malformed braces. A separate raw-syntax check enforces this narrower subset. Counting occurrences also catches a lost duplicate that a comparison of unique names would miss.</p>
+<ul class="references">
+<li><a href="https://docs.python.org/3/library/string.html#string.Formatter.parse" rel="noopener">Python: Formatter.parse and format-string syntax</a></li>
+<li><a href="https://docs.python.org/3/library/collections.html#collections.Counter" rel="noopener">Python: Counter</a></li>
+</ul>
+</section>
+<section aria-labelledby="section-3">
+<h2 id="section-3">Copy and run the complete example</h2>
+<p class="original-prose">Save the following code as checker.py using a plain-text editor. Run python checker.py in that folder; use python3 if that is your Python command. It uses only the standard library and Python 3.10-compatible syntax. Prefer a currently supported Python release. No packages, account, or network connection are needed.</p>
+<p class="original-prose">The comparison functions parse and count; they do not evaluate expressions, render incoming strings, or write files. The final demonstration renders only a fixed example with known string values. Keep both originals unchanged and discuss flagged differences instead of automatically replacing tokens.</p>
+<div class="code-toolbar"><span>checker.py</span><a href="checker.py" download="checker.py" id="download-checker">Download checker.py</a></div>
+<p class="copy-note">Select the code to copy it, or download the file.</p>
+<pre tabindex="0" aria-label="Complete checker.py"><code id="checker-source">&quot;&quot;&quot;Review a deliberately small named-brace subset; never rewrite text.&quot;&quot;&quot;
+
+from collections import Counter
+from string import Formatter
+import re
+
+
+SUBSET = re.compile(
+    r&quot;(?:[^{}%$]|\{\{|\}\}|\{[A-Za-z_][A-Za-z0-9_]*\})*&quot;
+)
+
+
+def counts(text: str) -&gt; Counter:
+    try:
+        parts = list(Formatter().parse(text))
+    except ValueError:
+        raise ValueError(&quot;malformed brace syntax&quot;) from None
+    # Check raw syntax too: parse() does not distinguish {name:} from {name}.
+    if SUBSET.fullmatch(text) is None:
+        raise ValueError(&quot;outside named-brace subset&quot;)
+    return Counter(name for _, name, _, _ in parts if name is not None)
+
+
+def compare(source: str, candidate: str) -&gt; str:
+    before, after = counts(source), counts(candidate)
+    missing = dict(sorted((before - after).items()))
+    added = dict(sorted((after - before).items()))
+    if missing or added:
+        return f&quot;REVIEW missing={missing}; added={added}&quot;
+    return &quot;MATCH counts only&quot;
+
+
+# Synthetic English strings: these are rephrases, not translations.
+CASES = (
+    (&quot;reordered&quot;, &quot;Hello {person}, open {room}.&quot;,
+     &quot;{room} is ready, {person}.&quot;),
+    (&quot;lost&quot;, &quot;Open {room}, {person}.&quot;, &quot;Open {room}.&quot;),
+    (&quot;renamed&quot;, &quot;Hello {person}.&quot;, &quot;Hello {name}.&quot;),
+    (&quot;repeated&quot;, &quot;{person}, please ask {person}.&quot;,
+     &quot;{person}, please ask.&quot;),
+    (&quot;escaped&quot;, &quot;Type {{person}} for {person}.&quot;,
+     &quot;For {person}, type {{person}}.&quot;),
+    (&quot;unsupported&quot;, &quot;Hello {person}.&quot;, &quot;Hello {person!r}.&quot;),
+    (&quot;malformed&quot;, &quot;Hello {person}.&quot;, &quot;Hello {person.&quot;),
+)
+
+
+if __name__ == &quot;__main__&quot;:
+    for label, source, candidate in CASES:
+        try:
+            result = compare(source, candidate)
+        except ValueError as error:
+            result = f&quot;REJECT {error}&quot;
+        print(f&quot;{label}: {result}&quot;)
+
+    # Only render our fixed example with known, ordinary string values.
+    print(&quot;rendered:&quot;, CASES[0][2].format_map(
+        {&quot;person&quot;: &quot;Alex&quot;, &quot;room&quot;: &quot;Cedar&quot;}
+    ))
+</code><br aria-hidden="true"></pre>
+</section>
+<section aria-labelledby="section-4">
+<h2 id="section-4">Read the actual output</h2>
+<p class="original-prose">The output below was produced by the complete script on Python 3.10.2. Missing means fewer occurrences than the source; added means more. Renaming therefore appears as one missing name and one added name. Reordering passes. The repeated example loses one occurrence. Escaped literal braces do not add a field. Unsupported and malformed input are rejected before comparison.</p>
+<pre tabindex="0" aria-label="Executed output"><code id="expected-output">reordered: MATCH counts only
+lost: REVIEW missing={&#x27;person&#x27;: 1}; added={}
+renamed: REVIEW missing={&#x27;person&#x27;: 1}; added={&#x27;name&#x27;: 1}
+repeated: REVIEW missing={&#x27;person&#x27;: 1}; added={}
+escaped: MATCH counts only
+unsupported: REJECT outside named-brace subset
+malformed: REJECT malformed brace syntax
+rendered: Cedar is ready, Alex.
+</code><br aria-hidden="true"></pre>
+</section>
+<section aria-labelledby="section-5">
+<h2 id="section-5">Review in the consuming application</h2>
+<p class="original-prose">A REVIEW result is a candidate for investigation, not an instruction to restore a token. Repetition may legitimately change with the wording. Check the application&#x27;s contract, then render approved examples with known arguments through its real formatting path. Verify expected values, visible text, escaping, line wrapping, and accessibility in context.</p>
+<p class="original-prose">MATCH means only equal occurrence counts within this subset. It cannot prove meaning, grammar, pluralization, correct order, runtime safety, or the application&#x27;s escaping behavior. The demonstration does not authorize formatting arbitrary untrusted objects or evaluating strings as code.</p>
+<p class="original-prose">Terminology needs a separate review. For church material, PewTranslate&#x27;s sermon translation glossary guide offers a way to organize names and terms for human review; it does not validate interface placeholders or demonstrate an available production translation service.</p>
+<ul class="references">
+<li><a href="https://pewtranslate.com/en/guides/prepare-sermon-translation-glossary" rel="noopener">Prepare a sermon translation glossary</a></li>
+</ul>
+</section>
+<section aria-labelledby="section-6">
+<h2 id="section-6">About this tutorial</h2>
+<p class="original-prose">Original AI-assisted tutorial by PewTranslate. Examples are fictional. PewTranslate&#x27;s live translation accounts are closed; this exercise requires none. Python and Google do not endorse this tutorial.</p>
+</section>
+</main>
+</div>
+</body>
+</html>

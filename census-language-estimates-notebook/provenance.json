@@ -1,0 +1,123 @@
+{
+  "purpose": "Offline audit of two public aggregate ACS records, not a geographic comparison",
+  "source_organization": "U.S. Census Bureau",
+  "dataset": "2024 ACS 5-year detailed table C16001",
+  "survey_period": "2020-2024",
+  "universe": "Population 5 years and over",
+  "geographies": [
+    {
+      "geo_id": "0500000US48029",
+      "kind": "county",
+      "code": "48029",
+      "label": "Bexar County, Texas",
+      "label_source": "2024 county gazetteer: USPS TX, GEOID 48029, NAME Bexar County"
+    },
+    {
+      "geo_id": "860Z200US78201",
+      "kind": "ZCTA",
+      "code": "78201",
+      "label": "ZCTA 78201",
+      "label_source": "Summary-file GEO_ID and Census summary level 860; not a postal ZIP boundary claim"
+    }
+  ],
+  "files": [
+    {
+      "path": "data/c16001-two-geographies.dat",
+      "sha256": "e62f92cebfb814601585fdc73209fbd7973532c97b478d29e15f8b2e59a19c9b",
+      "bytes": 1555,
+      "source_url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/acsdt5y2024-c16001.dat",
+      "retrieved_at": "2026-10-28T08:33:49.727717+00:00",
+      "source_http_status": 200,
+      "source_sha256": "dae7f251470e964510ce46eedb520b5609835a8244190a530638e022ecd1a84e",
+      "source_bytes": 70921995,
+      "source_last_modified": "Thu, 29 Jan 2026 13:24:35 GMT",
+      "source_line_numbers_1_based": [
+        1,
+        3319,
+        279693
+      ],
+      "extraction": "Original header and matching complete source lines, byte-for-byte; original order and line endings retained."
+    },
+    {
+      "path": "data/c16001-table-shell.txt",
+      "sha256": "9b01f5adc2d75080839b98909c7cc38316ccdd5c331ad1ada673dda58e294a7d",
+      "bytes": 5582,
+      "source_url": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/documentation/ACS20245YR_Table_Shells.txt",
+      "retrieved_at": "2026-10-28T08:34:53.038039+00:00",
+      "source_http_status": 200,
+      "source_sha256": "5b46f4af873744a415c4974204010db976e2a61ff916674732f81c496a6b517d",
+      "source_bytes": 5622840,
+      "source_last_modified": "Thu, 22 Jan 2026 12:15:03 GMT",
+      "source_line_numbers_1_based": [
+        1,
+        27084,
+        27085,
+        27086,
+        27087,
+        27088,
+        27089,
+        27090,
+        27091,
+        27092,
+        27093,
+        27094,
+        27095,
+        27096,
+        27097,
+        27098,
+        27099,
+        27100,
+        27101,
+        27102,
+        27103,
+        27104,
+        27105,
+        27106,
+        27107,
+        27108,
+        27109,
+        27110,
+        27111,
+        27112,
+        27113,
+        27114,
+        27115,
+        27116,
+        27117,
+        27118,
+        27119,
+        27120,
+        27121
+      ],
+      "extraction": "Original header and matching complete source lines, byte-for-byte; original order and line endings retained."
+    },
+    {
+      "path": "data/county-48029.tsv",
+      "sha256": "1a128fa88f3b20efc0fd7187b321b8442dbd7bb0fa84e12e5bc2a1ccdae98d6c",
+      "bytes": 392,
+      "source_url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_counties_national.zip",
+      "retrieved_at": "2026-10-28T08:33:46.557696+00:00",
+      "source_http_status": 200,
+      "source_sha256": "3c337402b5c6e8d5aa26b4278ccf4edc8989f2683765b3ffbf22296cdb2df3a0",
+      "source_bytes": 141679,
+      "source_last_modified": "Fri, 30 Aug 2024 18:40:41 GMT",
+      "source_line_numbers_1_based": [
+        1,
+        2541
+      ],
+      "extraction": "Original header and matching complete source lines, byte-for-byte; original order and line endings retained.",
+      "archive_member": "2024_Gaz_counties_national.txt",
+      "archive_member_sha256": "0a121d136b434e3ae749d053db19dfbacbb56eebf30335cfa5031388803b4451"
+    }
+  ],
+  "retrieval_note": "These static files were retrieved directly from www2.census.gov. Earlier API-route connection failures did not supply data. Source Last-Modified is a server header, not the survey period or an inferred publication date.",
+  "data_rights": "Public aggregate U.S. Census Bureau source material; attribution retained. MIT applies to original code and explanatory text, not a relicense of source data.",
+  "guidance": {
+    "table_metadata": "https://api.census.gov/data/2024/acs/acs5/groups/C16001.html",
+    "summary_file": "https://www.census.gov/programs-surveys/acs/data/summary-file.html",
+    "period": "https://www.census.gov/programs-surveys/acs/guidance/estimates.html",
+    "accuracy": "https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf",
+    "annotations": "https://www.census.gov/data/developers/data-sets/acs-1year/notes-on-acs-estimate-and-annotation-values.html",
+    "zcta": "https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html"
+  }
+}

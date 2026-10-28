@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Inspect locale tags in your browser: canonical identifiers, DateTimeFormat lookup, localized names and a useful CSV. Local processing, no account.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Browser locale inspector</title>
+<style>
+:root{color-scheme:light;--ink:#172e35;--muted:#496169;--paper:#f3f6f4;--line:#becdc7;--green:#176047;--soft:#e8f3ec;--red:#9c2c24;--amber:#795600}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:17px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1140px;margin:auto;padding:28px 18px 48px}header{max-width:870px;margin-bottom:24px}.eyebrow{font-size:.8rem;font-weight:750;letter-spacing:.13em;text-transform:uppercase;color:var(--green);margin:0 0 9px}h1{font-size:clamp(2.1rem,5vw,3.1rem);line-height:1.1;letter-spacing:-.035em;margin:0 0 18px}h2{font-size:1.4rem;line-height:1.3;margin:0 0 14px}h3{font-size:1.05rem;margin:20px 0 7px}p{margin:0 0 14px}a{color:#075c87;text-underline-offset:.18em}a:hover{text-decoration-thickness:2px}button,input,textarea{font:inherit;max-width:100%;touch-action:manipulation}button{min-height:46px;border:1px solid var(--green);border-radius:6px;background:white;color:var(--green);padding:.6rem 1rem;font-weight:650;cursor:pointer}button:hover{background:var(--soft)}button.primary{background:var(--green);color:white}button:disabled{opacity:.55;cursor:default}input,textarea{border:1px solid #7c9490;border-radius:5px;padding:.65rem;color:var(--ink);background:white;font-size:16px}input{width:100%;min-height:46px}textarea{width:100%;min-height:255px;resize:vertical;font:16px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}textarea::placeholder{color:#657475}:focus-visible{outline:3px solid #b55e14;outline-offset:3px}.skip{position:absolute;left:12px;top:-100px;background:white;padding:.6rem;z-index:2}.skip:focus{top:10px}.intro{font-size:1.08rem}.muted,.help{color:var(--muted);font-size:.92rem}.panel{background:white;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:22px}.field label{display:block;font-weight:650;margin-bottom:6px}.help{margin:6px 0 0}.input-grid{display:grid;gap:18px}.settings{max-width:420px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.notice{background:#f2f6f4;border-left:4px solid var(--green);padding:14px 16px;margin:14px 0}.notice.problem{background:#fff5f1;border-color:var(--red)}.notice strong{display:block}.demo{color:var(--amber);font-weight:650;margin-top:12px}.context{margin:12px 0 0;padding:12px;background:#f5f7f6;font-size:.94rem;overflow-wrap:anywhere}.context p{margin:0 0 6px}.context p:last-child{margin:0}code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;overflow-wrap:anywhere}progress{display:block;width:100%;height:15px;margin:8px 0;accent-color:var(--green)}.table-wrap{margin-top:18px;border:1px solid var(--line);border-radius:6px;overflow:auto}table{border-collapse:collapse;width:100%;table-layout:fixed}caption{text-align:left;padding:12px;font-size:.9rem;color:var(--muted)}th,td{text-align:left;vertical-align:top;padding:13px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#eff4f1;font-size:.9rem}th:nth-child(1){width:25%}th:nth-child(2){width:23%}th:nth-child(3){width:23%}td{font-size:.94rem}td p{margin:0 0 7px}td small{display:block;font-size:.86rem;color:var(--muted);margin:5px 0}.original{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6f5;padding:7px;margin:6px 0;font:15px/1.5 ui-monospace,Consolas,monospace;max-height:8rem;overflow:auto}.tag{font-weight:750;font-size:.8rem;text-transform:uppercase;letter-spacing:.025em}.tag.ok{color:var(--green)}.tag.review{color:var(--amber)}.tag.error{color:var(--red)}.notes{margin:7px 0 0;padding-left:1.1rem}.notes li{margin:0 0 7px}.guide-list{padding-left:1.3rem}.guide-list li{margin-bottom:.5rem}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:650}details p{font-size:.94rem}.foot{color:var(--muted);font-size:.9rem;margin-top:26px}.foot p{margin-bottom:8px}[hidden]{display:none!important}
+.foot a,#method a{display:inline-block;min-height:44px;padding:8px 0;vertical-align:middle}
+@media(min-width:760px){main{padding:42px 28px 56px}.panel{padding:26px}.input-grid{grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr);align-items:start}textarea{min-height:310px}}
+@media(max-width:699px){.panel{padding:16px}table,caption,tbody,tr,td{display:block;width:100%}thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}tr{border-bottom:2px solid var(--line)}td{border:0;padding:11px 12px}td::before{content:attr(data-label);display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:6px}.table-wrap{overflow:visible}.actions button{flex:1 1 145px}}
+@media print{body{background:white;font-size:11pt}main{padding:0;max-width:none}h1{font-size:24pt}#input-panel,.actions,.skip,.foot,details{display:none!important}.panel{padding:0;border:0}table{font-size:10pt}.table-wrap{overflow:visible}tr{break-inside:avoid}.original{max-height:none}.notice{background:white}}
+</style>
+</head>
+<body>
+<a class="skip" href="#input-panel">Skip to locale input</a>
+<main>
+<header>
+<p class="eyebrow">Local configuration review</p>
+<h1>Browser locale inspector</h1>
+<p class="intro">Review a list of locale tags before putting them in a configuration. See canonical identifiers, duplicate mappings, date-formatting locale matches and localized names—then download a row-by-row handoff.</p>
+<p class="muted">These are observations of this browser’s <code>Intl</code> APIs. They do not establish registered-language validity, exact dialect coverage or translation support.</p>
+</header>
+<section id="input-panel" class="panel" aria-labelledby="input-heading" tabindex="-1">
+<h2 id="input-heading">1. Add one locale tag per line</h2>
+<form id="form">
+<div class="input-grid">
+<div class="field"><label for="source">Locale tags</label><textarea id="source" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="source-help" placeholder="en-US&#10;fr-CA&#10;zh-Hant-TW"></textarea><p id="source-help" class="help">Keep the original list here. Leading/trailing whitespace is trimmed only in the copy passed to the APIs; every original row, blank line and duplicate is retained.</p><p class="help">Up to 64 KiB and 1,000 rows. A trailing newline creates a blank final row.</p></div>
+<div class="settings">
+<div class="field"><label for="display-locale">Locale for localized names</label><input id="display-locale" value="en" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="display-help"><p id="display-help" class="help">For example, <code>en</code> or <code>fr</code>. The result shows the display locale the browser actually resolves, including default-locale fallback.</p></div>
+<h3>Fixed, explicit checks</h3>
+<p class="help"><code>Intl.getCanonicalLocales</code> per row.<br><code>Intl.DateTimeFormat</code> with <code>localeMatcher: "lookup"</code>.<br><code>Intl.DisplayNames</code> with <code>fallback: "none"</code>.</p>
+<button type="button" id="example" style="margin-top:16px">Load example configuration</button>
+<p class="help">Public tag examples and one malformed entry. No real user data.</p>
+</div>
+</div>
+<p id="example-note" class="demo" hidden>Example configuration—not a product’s supported-language list.</p>
+<div class="actions"><button id="inspect" class="primary" type="submit">Inspect this batch</button><button id="reset" type="button">Reset to blank</button></div>
+</form>
+<p class="help">Everything stays in page memory. No account, upload, external assets or storage. Refreshing or closing the page clears the batch.</p>
+</section>
+<section class="panel" aria-labelledby="results-heading">
+<h2 id="results-heading" tabindex="-1">2. Read the configuration results</h2>
+<div id="status" class="notice" role="status" aria-live="polite"><strong>Ready for a batch.</strong><span>Paste tags or load the example, then choose Inspect this batch.</span></div>
+<progress id="progress" max="1" value="0" aria-label="Rows inspected" hidden></progress>
+<p id="counts" class="help"></p>
+<div id="display-context" class="context" hidden></div>
+<p id="run-context" class="help"></p>
+<div class="actions"><button id="download" type="button" disabled>Download all rows CSV</button></div>
+<p id="export-note" class="help" role="status"></p>
+<div id="table-wrap" class="table-wrap" hidden>
+<table><caption>Original rows stay in order. A match is specific to the named service and this runtime.</caption><thead><tr><th scope="col">Original / canonical</th><th scope="col">DateTimeFormat lookup</th><th scope="col">Localized name</th><th scope="col">Review next</th></tr></thead><tbody id="rows"></tbody></table>
+</div>
+<p id="display-count" class="help"></p><div class="actions"><button id="more" type="button" hidden>Show 100 more rows</button></div>
+</section>
+<section class="panel" aria-labelledby="guide-heading">
+<h2 id="guide-heading">Turn the observations into a review</h2>
+<ol class="guide-list"><li><strong>Check rejected inputs.</strong> Underscores, multiple tags on one line and an identifier outside this API’s accepted syntax need a source check. A rejection is not a full BCP 47 verdict.</li><li><strong>Keep the intended distinctions.</strong> Two rows can canonicalize to the same identifier. Review that mapping before merging anything; this tool does not deduplicate your list.</li><li><strong>Test the actual user interface.</strong> A date-formatting lookup can use a broader locale. Inspect real formatting, language labels, fonts and content in each supported runtime.</li></ol>
+<p>If these tags will appear in a language selector, ask people what wording they recognize and prefer. PewTranslate’s <a href="https://pewtranslate.com/en/guides/welcoming-multilingual-visitors">guide to welcoming multilingual visitors</a> discusses offering choices without guessing someone’s language. A browser tag cannot establish a person’s preference or available translation assistance.</p>
+<details id="method"><summary>What each result means—and what it does not</summary>
+<p><strong>Canonicalization:</strong> <code>Intl.getCanonicalLocales([tag])</code> runs separately on each trimmed row. Accepted means this runtime accepted its structure and returned a canonical identifier. It does not query a registry. Some BCP 47 forms are outside the API’s accepted Unicode locale-identifier syntax.</p>
+<p><strong>DateTimeFormat lookup:</strong> <code>supportedLocalesOf([canonical], {localeMatcher: "lookup"})</code> asks whether this one service can match without its runtime default locale. “No non-default match” is not an invalid or nonexistent language. A successful lookup may resolve to a parent locale or ignore extensions. The separately constructed formatter’s <code>resolvedOptions().locale</code> is shown; equality is not proof of complete dialect or extension behavior.</p>
+<p><strong>Localized names:</strong> <code>Intl.Locale(canonical).baseName</code> supplies the language/script/region/variant identifier, without extensions or private-use subtags, to <code>Intl.DisplayNames.of</code>. Names use <code>type: "language"</code>, <code>languageDisplay: "standard"</code>, <code>localeMatcher: "lookup"</code> and <code>fallback: "none"</code>. No returned name means no localized name was returned for that query—not that the language does not exist. The requested and actual resolved display locales are both shown.</p>
+<p><strong>Partial failures:</strong> missing APIs, rejected identifiers, API exceptions and missing names are separate states. A display-locale setting error does not erase canonicalization or date-formatting results. Browser versions, builds and locale data can produce different results.</p>
+<p><strong>Bounds and output:</strong> input above 64 KiB or 1,000 rows is rejected in full. Individual trimmed rows above 256 UTF-16 code units are kept but not passed to the APIs. The display-locale setting is limited to 128 code units. Results appear 100 rows at a time; CSV includes the whole inspected batch. Line endings are row separators, not part of each exported original field.</p>
+<p><strong>CSV safety:</strong> every field is quoted, internal quotes are doubled, and formula-like cells receive a leading apostrophe. That protective prefix intentionally changes the exported field, not the source text. Keep it when opening untrusted values in a spreadsheet.</p>
+<p>API references: <a href="https://tc39.es/ecma402/">ECMA-402</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/getCanonicalLocales">canonicalization</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/supportedLocalesOf">DateTimeFormat matching</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/DisplayNames">DisplayNames options</a>.</p>
+</details>
+</section>
+<footer class="foot"><p>An AI-assisted, free resource by <a href="https://pewtranslate.com/">PewTranslate</a>. Live-translation accounts are closed. This tool diagnoses browser configuration; it does not translate or test PewTranslate language coverage.</p><p>MIT licensed · <a href="README.md">Usage notes and license</a>. Optional reference links leave this local tool only when you follow them.</p></footer>
+</main>
+<script>
+'use strict';
+(() => {
+const $ = id => document.getElementById(id), MAX_BYTES = 65536, MAX_ROWS = 1000, PAGE_SIZE = 100;
+let revision = 0, result = null, visible = PAGE_SIZE, isExample = false;
+const example = 'EN-us\nen-US\niw-IL\nhe-IL\nfr-CA\nen-US-u-ca-buddhist\nqaa\nen_US';
+const available = name => typeof globalThis.Intl === 'object' && typeof Intl[name] === 'function';
+const errorName = error => error && typeof error.name === 'string' ? error.name : 'Error';
+const bytes = value => new TextEncoder().encode(value).length;
+function status(title, detail, problem = false) {
+  const strong = document.createElement('strong'), span = document.createElement('span');
+  strong.textContent = title; span.textContent = detail; $('status').replaceChildren(strong, span); $('status').classList.toggle('problem', problem);
+}
+function invalidate(title = 'Input changed. Inspect the batch again.') {
+  revision++; result = null; visible = PAGE_SIZE; $('rows').replaceChildren(); $('table-wrap').hidden = true; $('display-context').hidden = true;
+  $('counts').textContent = ''; $('run-context').textContent = ''; $('display-count').textContent = ''; $('export-note').textContent = '';
+  $('download').disabled = true; $('more').hidden = true; $('inspect').disabled = false; $('progress').hidden = true;
+  status(title, 'Previous results are cleared so they cannot be exported for a different batch.');
+}
+function displayConfiguration(original) {
+  const d = {original, input: original.trim(), canonical: '', lookup: 'Not checked', resolved: '', state: 'Not configured', names: null, detail: ''};
+  if (!d.input || d.input.length > 128) {d.state = 'Display setting error'; d.detail = 'Enter one locale tag of 1–128 code units for localized names.'; return d;}
+  if (!available('getCanonicalLocales')) {d.state = 'API unavailable'; d.detail = 'Intl.getCanonicalLocales is unavailable; display setting was not checked.'; return d;}
+  try {d.canonical = Intl.getCanonicalLocales([d.input])[0];}
+  catch (e) {d.state = e instanceof RangeError ? 'Display setting rejected by Intl' : 'Display setting API error'; d.detail = 'Intl.getCanonicalLocales threw ' + errorName(e) + '. Check the display setting; other row checks can still run.'; return d;}
+  if (!available('DisplayNames')) {d.state = 'API unavailable'; d.detail = 'Intl.DisplayNames is unavailable; localized names were not queried.'; return d;}
+  if (typeof Intl.DisplayNames.supportedLocalesOf !== 'function') d.lookup = 'API unavailable: DisplayNames.supportedLocalesOf';
+  else {
+    try {d.lookup = Intl.DisplayNames.supportedLocalesOf([d.canonical], {localeMatcher: 'lookup'}).length ? 'Matched without default-locale fallback' : 'No non-default match; display names use runtime default fallback';}
+    catch (e) {d.lookup = 'DisplayNames lookup API error: ' + errorName(e);}
+  }
+  try {
+    d.names = new Intl.DisplayNames([d.canonical], {type: 'language', fallback: 'none', languageDisplay: 'standard', localeMatcher: 'lookup'});
+    d.resolved = d.names.resolvedOptions().locale; d.state = 'Ready';
+    d.detail = 'Names are requested for each canonical base name, without extensions or private-use subtags.';
+  } catch (e) {d.state = 'DisplayNames API error'; d.detail = 'DisplayNames construction/resolution threw ' + errorName(e) + '; no names were queried.'; d.names = null;}
+  return d;
+}
+function inspectRow(original, index, firstRows, display) {
+  const r = {row: index + 1, original, input: original.trim(), canonicalState: '', canonical: '', duplicateOf: '', match: 'Not queried', resolved: '', formatError: '', base: '', nameState: 'Not queried', label: '', notes: []};
+  if (!r.input) {r.canonicalState = 'Blank row'; r.notes.push('Keep or remove this blank row deliberately; no API call was made.'); return r;}
+  if (r.input !== original) r.notes.push('Surrounding whitespace was trimmed for API calls only; original text is retained.');
+  if (r.input.length > 256) {r.canonicalState = 'Row length limit'; r.notes.push('This row exceeds 256 code units. Check its source or split mistakenly combined tags; no API call was made.'); return r;}
+  if (!available('getCanonicalLocales')) {r.canonicalState = 'API unavailable'; r.notes.push('Intl.getCanonicalLocales is unavailable. Retry in a runtime providing this API; no structural verdict was made.'); return r;}
+  try {r.canonical = Intl.getCanonicalLocales([r.input])[0]; r.canonicalState = 'Accepted by Intl';}
+  catch (e) {r.canonicalState = e instanceof RangeError ? 'Rejected by Intl' : 'Canonicalization API error'; r.notes.push('Intl.getCanonicalLocales threw ' + errorName(e) + '. Check the original tag and API syntax; this is not complete BCP 47 or registration validation.'); return r;}
+  if (r.canonical !== r.input) r.notes.push('Canonical form differs from the API input. Review case or alias changes before updating configuration.');
+  if (firstRows.has(r.canonical)) {r.duplicateOf = firstRows.get(r.canonical); r.notes.push('Same canonical identifier as row ' + r.duplicateOf + '. Both rows remain; check intended distinctions before merging.');}
+  else firstRows.set(r.canonical, r.row);
+  if (!available('DateTimeFormat')) {r.match = 'API unavailable'; r.formatError = 'Intl.DateTimeFormat is unavailable.';}
+  else {
+    if (typeof Intl.DateTimeFormat.supportedLocalesOf !== 'function') {r.match = 'API unavailable'; r.formatError = 'DateTimeFormat.supportedLocalesOf is unavailable.';}
+    else {
+      try {r.match = Intl.DateTimeFormat.supportedLocalesOf([r.canonical], {localeMatcher:'lookup'}).length ? 'Matched without default-locale fallback' : 'No non-default match';}
+      catch (e) {r.match = 'API error'; r.formatError = 'DateTimeFormat.supportedLocalesOf threw ' + errorName(e) + '.';}
+    }
+    try {r.resolved = new Intl.DateTimeFormat([r.canonical], {localeMatcher:'lookup'}).resolvedOptions().locale;}
+    catch (e) {r.formatError += (r.formatError ? ' ' : '') + 'DateTimeFormat construction/resolution threw ' + errorName(e) + '.';}
+  }
+  if (r.match === 'No non-default match') r.notes.push('DateTimeFormat lookup did not find a non-default match. Choose and test an intentional formatting fallback; this is not an invalid-language result.');
+  else if (r.match === 'API unavailable' || r.match === 'API error') r.notes.push(r.formatError + ' Recheck in a runtime providing a working DateTimeFormat API.');
+  if (r.resolved && r.resolved !== r.canonical) r.notes.push('The formatter resolved to a different identifier. Review broader locale matching or ignored extensions in actual formatting.');
+  if (r.formatError && r.match !== 'API unavailable' && r.match !== 'API error') r.notes.push(r.formatError + ' The lookup result does not establish successful formatter construction.');
+  if (!display.names) {r.nameState = display.state; r.notes.push(display.detail); return r;}
+  if (!available('Locale')) {r.nameState = 'API unavailable'; r.notes.push('Intl.Locale is unavailable; a base name could not be obtained, so the localized name was not queried.'); return r;}
+  try {r.base = new Intl.Locale(r.canonical).baseName;}
+  catch (e) {r.nameState = 'Base-name API error'; r.notes.push('Intl.Locale threw ' + errorName(e) + '; localized name was not queried.'); return r;}
+  if (r.base !== r.canonical) r.notes.push('Localized name is for ' + r.base + ' only; extensions and private-use subtags are not described by that label.');
+  try {
+    const label = display.names.of(r.base);
+    if (label === undefined) {r.nameState = 'No localized name returned'; r.notes.push('Ask a language reviewer for an appropriate label. Missing DisplayNames data does not mean the language is nonexistent.');}
+    else {r.nameState = 'Localized name returned'; r.label = label;}
+  } catch (e) {r.nameState = 'DisplayNames API error'; r.notes.push('DisplayNames.of threw ' + errorName(e) + '. Check the base-name query separately from canonicalization.');}
+  if (!r.notes.length) r.notes.push('No configuration difference flagged by these checks. Test real formatting and ask readers to review the label; no product coverage is established.');
+  return r;
+}
+function node(tag, text, className) {const element = document.createElement(tag); element.textContent = text; if (className) element.className = className; return element;}
+function renderRows() {
+  if (!result) return;
+  const fragment = document.createDocumentFragment();
+  for (const r of result.rows.slice(0, visible)) {
+    const tr = document.createElement('tr'), cells = ['Original / canonical','DateTimeFormat lookup','Localized name','Review next'].map(label => {const td=document.createElement('td'); td.dataset.label=label; return td;});
+    cells[0].append(node('strong','Row ' + r.row), node('pre',r.original === '' ? '[empty row]' : r.original,'original'), node('p',r.canonicalState,'tag ' + (r.canonicalState === 'Accepted by Intl' ? 'ok' : r.canonicalState === 'Blank row' ? 'review' : 'error')));
+    if (r.canonical) cells[0].append(node('p',r.canonical,'mono'));
+    if (r.input !== r.original) cells[0].append(node('small','API input: ' + (r.input || '[empty]')));
+    if (r.duplicateOf) cells[0].append(node('small','Canonical duplicate of row ' + r.duplicateOf));
+    cells[1].append(node('p',r.match));
+    cells[1].append(node('small','Resolved formatting locale: ' + (r.resolved || 'not available')));
+    if (r.formatError) cells[1].append(node('small',r.formatError));
+    cells[2].append(node('p',r.nameState));
+    if (r.label) {const label=node('p',r.label); label.dir='auto'; cells[2].append(label);}
+    if (r.base) cells[2].append(node('small','Name queried for base: ' + r.base));
+    const ul = document.createElement('ul'); ul.className = 'notes'; for (const note of r.notes) ul.append(node('li',note)); cells[3].append(ul);
+    tr.append(...cells); fragment.append(tr);
+  }
+  $('rows').replaceChildren(fragment); $('table-wrap').hidden = false;
+  $('display-count').textContent = 'Showing ' + Math.min(visible,result.rows.length) + ' of ' + result.rows.length + ' original rows. CSV contains every inspected row.';
+  $('more').hidden = visible >= result.rows.length;
+}
+function renderBatch() {
+  const rows = result.rows, accepted = rows.filter(r=>r.canonicalState==='Accepted by Intl').length, blank = rows.filter(r=>r.canonicalState==='Blank row').length, duplicates = rows.filter(r=>r.duplicateOf).length;
+  const rejected = rows.filter(r=>r.canonicalState==='Rejected by Intl').length, other = rows.length-accepted-blank-rejected;
+  const partial = rows.some(r=>/error|unavailable|limit/i.test(r.canonicalState+' '+r.match+' '+r.nameState) || r.formatError) || result.display.state !== 'Ready' || /error|unavailable/i.test(result.display.lookup);
+  status(partial ? 'Inspection finished with unavailable or incomplete checks.' : 'Batch inspected in this browser.', 'Review the named API results and next actions. Original rows and canonical duplicates have been kept.', partial);
+  $('counts').textContent = rows.length + ' rows · ' + accepted + ' accepted by Intl · ' + rejected + ' rejected by Intl · ' + blank + ' blank · ' + other + ' other input/API issues · ' + duplicates + ' canonical duplicates';
+  const d = result.display, box = $('display-context'); box.replaceChildren();
+  box.append(node('p','Localized-name settings: ' + d.state),node('p','Requested: ' + (d.original || '[empty]') + ' · Canonical: ' + (d.canonical || 'not available') + ' · Resolved display locale: ' + (d.resolved || 'not available')),node('p','Intl.DisplayNames lookup: ' + d.lookup),node('p',d.detail)); box.hidden = false;
+  $('run-context').textContent = (isExample ? 'Example configuration. ' : '') + 'Observed ' + result.observed + '. DateTimeFormat matching mode: lookup. Name fallback: none. Results may differ in another runtime.';
+  $('progress').hidden = true; $('inspect').disabled = false; $('download').disabled = false; renderRows(); $('results-heading').focus();
+}
+function csvCell(value) {
+  let text = String(value ?? '');
+  if (/^[\s\u0000-\u001f\u007f]*[=+\-@]/u.test(text) || /^[\t\r\n]/.test(text)) text = "'" + text;
+  return '"' + text.replace(/"/g,'""') + '"';
+}
+function makeCsv() {
+  const d=result.display;
+  const header=['Row','Original','API input (trimmed)','Canonicalization state','Canonical identifier','Canonical duplicate of row','DateTimeFormat lookup result','Resolved formatting locale','Formatting API error','Name base query','Name state','Localized name','Requested display locale','Canonical display locale','DisplayNames lookup result','Resolved display locale','Display setting state','Next actions','Observed at UTC'];
+  const rows=result.rows.map(r=>[r.row,r.original,r.input,r.canonicalState,r.canonical,r.duplicateOf,r.match,r.resolved,r.formatError,r.base,r.nameState,r.label,d.original,d.canonical,d.lookup,d.resolved,d.state,r.notes.join('\n'),result.observed]);
+  return '\uFEFF'+[header,...rows].map(row=>row.map(csvCell).join(',')).join('\r\n')+'\r\n';
+}
+$('form').addEventListener('submit', async event => {
+  event.preventDefault(); invalidate('Inspecting this batch…');
+  const raw=$('source').value, displayInput=$('display-locale').value, token=revision;
+  if (!raw) {status('No batch to inspect.','Paste one locale tag per line or load the example.',true); return;}
+  if (bytes(raw)>MAX_BYTES) {status('Batch exceeds 64 KiB.','Nothing was inspected. Split a copy into smaller batches; your input is unchanged.',true); return;}
+  const lines=raw.split(/\r\n|\r|\n/);
+  if (lines.length>MAX_ROWS) {status('Batch exceeds 1,000 rows.','Nothing was inspected. Split a copy into smaller batches; your input is unchanged.',true); return;}
+  $('inspect').disabled=true; $('progress').hidden=false; $('progress').max=lines.length; $('progress').value=0;
+  const display=displayConfiguration(displayInput), firstRows=new Map(), rows=[];
+  try {
+    for(let i=0;i<lines.length;i++) {
+      if(token!==revision) return;
+      rows.push(inspectRow(lines[i],i,firstRows,display));
+      if((i+1)%25===0) {$('progress').value=i+1; status('Inspecting row '+(i+1)+' of '+lines.length+'.','All original rows are being kept.'); await new Promise(resolve=>setTimeout(resolve,0));}
+    }
+    if(token!==revision) return;
+    result={rows,display,observed:new Date().toISOString()}; renderBatch();
+  } catch(e) {
+    if(token!==revision) return;
+    result=null; $('progress').hidden=true; $('inspect').disabled=false; $('download').disabled=true;
+    status('Inspection stopped with an unexpected API/runtime error.',errorName(e)+'. No partial CSV is offered. Your input remains unchanged; retry in a current browser.',true);
+  }
+});
+$('source').addEventListener('input',()=>{isExample=false; $('example-note').hidden=true; invalidate();});
+$('display-locale').addEventListener('input',()=>invalidate('Display-locale setting changed. Inspect the batch again.'));
+$('source').addEventListener('paste',event=>{
+  if(!event.clipboardData)return;
+  const field=$('source'), next=field.value.slice(0,field.selectionStart)+event.clipboardData.getData('text/plain')+field.value.slice(field.selectionEnd);
+  if(bytes(next)>MAX_BYTES || next.split(/\r\n|\r|\n/).length>MAX_ROWS){event.preventDefault(); invalidate(); status('Paste was not inserted.','It would exceed 64 KiB or 1,000 rows. Split a copy into smaller batches; previous input is unchanged.',true);}
+});
+$('example').addEventListener('click',()=>{invalidate('Example configuration loaded.'); $('source').value=example; $('display-locale').value='en'; isExample=true; $('example-note').hidden=false; $('source').focus(); $('source').setSelectionRange(0,0); $('source').scrollTop=0;});
+$('reset').addEventListener('click',()=>{invalidate('Reset to blank.'); $('source').value=''; $('display-locale').value='en'; isExample=false; $('example-note').hidden=true; $('source').focus();});
+$('more').addEventListener('click',()=>{visible+=PAGE_SIZE;renderRows();});
+$('download').addEventListener('click',()=>{
+  if(!result)return;
+  const url=URL.createObjectURL(new Blob([makeCsv()],{type:'text/csv;charset=utf-8'})), a=document.createElement('a');
+  a.href=url;a.download='browser-locale-inspection.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('export-note').textContent='Downloaded '+result.rows.length+' rows, including blanks and duplicates. Formula-like cells have a protective apostrophe. Source text is unchanged.';
+});
+})();
+</script>
+</body>
+</html>

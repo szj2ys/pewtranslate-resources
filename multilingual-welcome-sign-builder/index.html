@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Make a printable A4 welcome sign from your own reviewed wording. Up to three language lines, right-to-left support, and an offline HTML download. Free, no account.">
+<title>Multilingual welcome sign builder | PewTranslate</title>
+<style id="sign-styles">
+.paper{box-sizing:border-box;container-type:inline-size;aspect-ratio:210/297;background:#fff;color:#111;width:100%;padding:0;border:1px solid #bcc5be;position:relative;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;--type-scale:1}
+.paper.landscape{aspect-ratio:297/210}
+.sign-content{box-sizing:border-box;height:100%;padding:8%;display:flex;flex-direction:column;justify-content:center;text-align:center;overflow:visible;gap:5cqw}
+.sign-content>*{flex:0 0 auto}
+.paper.landscape .sign-content{gap:3cqw;padding:6%}
+.sign-title{font-size:calc(9cqw * var(--type-scale));font-weight:800;line-height:1.12;letter-spacing:-.025em;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sign-subtitle{font-size:calc(3.5cqw * var(--type-scale));line-height:1.4;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sign-lines{display:flex;flex-direction:column;gap:4cqw}
+.paper.landscape .sign-lines{gap:2.2cqw}
+.sign-line{font-size:calc(5.6cqw * var(--type-scale));line-height:1.3;font-weight:650;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:isolate}
+.demo-label{font-size:calc(2.2cqw * var(--type-scale));line-height:1.4;border-top:1px solid #777;padding-top:2cqw;margin:0;color:#333}
+.sign-empty{font-size:4cqw;color:#626862;line-height:1.4;margin:auto;text-align:center}
+@media print{@page{margin:0}html,body{margin:0!important;padding:0!important;background:white!important}.paper{border:0!important;width:210mm!important;height:297mm!important;aspect-ratio:auto!important;break-inside:avoid;box-shadow:none!important}.paper.landscape{width:297mm!important;height:210mm!important}.sign-content{box-sizing:border-box}.paper *{color:#000!important}}
+</style>
+<style id="page-size">@page{size:A4 portrait;margin:0}</style>
+<style>
+:root{color-scheme:light;--ink:#18342e;--muted:#4e625b;--green:#165646;--border:#bbc9c0;--wash:#f3f5ef}*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#155b4b;text-underline-offset:3px}button,input,select{font:inherit}button,a,input,select{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a95109;outline-offset:3px}button{min-height:46px;padding:10px 16px;border:1px solid var(--green);border-radius:5px;background:white;color:var(--green);font-weight:650;cursor:pointer}button:hover{background:#e5ede6}button.primary{background:var(--green);color:white}button:disabled{opacity:.5;cursor:not-allowed}input,select{width:100%;min-width:0;min-height:46px;border:1px solid #82978c;border-radius:4px;padding:10px;background:white;color:#132f25}input::placeholder{color:#66766e}input{margin-top:6px}label{display:block;font-weight:650}label small{display:block;font-weight:400;color:var(--muted);margin-top:3px;font-size:.86rem}select{margin-top:6px}h1{font-size:clamp(2rem,4vw,3.25rem);line-height:1.1;letter-spacing:-.04em;max-width:780px;margin:12px 0 18px}h2{font-size:1.22rem;line-height:1.3;margin:0 0 12px}p{margin:10px 0}.wrap{max-width:1220px;margin:auto;padding:30px 24px}.intro{max-width:760px;font-size:1.1rem}.eyebrow{font-size:.8rem;letter-spacing:.12em;font-weight:750;text-transform:uppercase;color:var(--green)}.privacy{max-width:850px;border-left:3px solid var(--green);padding:4px 0 4px 16px;color:var(--muted);font-size:.91rem;margin:22px 0}.workspace{display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:34px;align-items:start;margin-top:26px}.editor{background:white;border:1px solid var(--border);border-radius:8px;padding:22px}.section{margin-top:26px;padding-top:22px;border-top:1px solid #d7dfd7}.field{margin:16px 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.line-editor{margin:18px 0;padding-bottom:18px;border-bottom:1px solid #e4e9e2}.line-editor:last-child{border:0;padding-bottom:0}.direction{max-width:205px;margin-top:9px;font-size:.88rem;font-weight:500}.direction select{min-height:40px;padding:6px 9px}.note{font-size:.88rem;color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{flex:1 1 140px}.example-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.example-actions button{font-size:.87rem;padding:8px 12px}.review{display:flex;gap:10px;align-items:flex-start;margin:18px 0;font-size:.9rem;font-weight:500}.review input{width:19px;height:19px;min-height:19px;margin-top:4px;flex:0 0 19px;accent-color:var(--green)}.preview-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:15px}.preview-head h2{margin:0}.preview-head span{font-size:.85rem;color:var(--muted)}.preview-stage{max-width:600px;margin:0 auto}.paper{box-shadow:0 10px 35px #273c2912}.preview-note{max-width:600px;margin:14px auto;color:var(--muted);font-size:.88rem}#fit-notice{min-height:1.6em;margin:12px 0;font-size:.9rem}#fit-notice.warning{color:#7b3e00}#notice{min-height:1.6em;font-size:.9rem;color:var(--green)}footer{margin-top:36px;border-top:1px solid var(--border);padding-top:24px;max-width:900px;font-size:.91rem}footer ul{padding-left:22px}footer li{margin:8px 0}.skip{position:absolute;top:-80px;left:14px;background:white;padding:12px;z-index:10}.skip:focus{top:10px}[hidden]{display:none!important}noscript p{background:#fff0d5;padding:14px}@media(max-width:830px){.workspace{grid-template-columns:1fr;gap:28px}.wrap{padding:24px 16px}.editor{padding:18px}.preview-stage{max-width:540px}}@media(max-width:400px){.row{grid-template-columns:1fr;gap:0}.preview-head{display:block}.preview-head span{display:block;margin-top:6px}}@media print{body>.skip,.screen-only,.editor,footer,.preview-head,.preview-note,#fit-notice,#notice{display:none!important}.wrap,.workspace,.preview-stage{display:block!important;max-width:none!important;padding:0!important;margin:0!important}.paper{margin:0!important}body.print-blocked .paper{display:none!important}body.print-blocked::before{display:block;padding:20mm;font-size:18pt;content:"Return to the builder, add your wording, and review it before printing."}}
+</style>
+</head>
+<body class="print-blocked">
+<a class="skip" href="#builder">Skip to sign editor</a>
+<div class="wrap">
+<header class="screen-only">
+<p class="eyebrow">PewTranslate · a practical welcome resource</p>
+<h1>A clear welcome, in your own words.</h1>
+<p class="intro">Create one printable sign with up to three language lines. Paste wording your team has reviewed, choose its reading direction, and print or keep an offline copy.</p>
+<p class="privacy">Your wording stays in this page’s memory. No uploads, storage, analytics, or account. Refreshing closes your work; download it first. This AI-assisted tool arranges text—it does not translate or check language accuracy.</p>
+</header>
+<noscript><p>The editor needs JavaScript. You can still make a sign in a document editor: use an A4 page, high contrast, generous margins, and wording reviewed by a competent speaker of each language.</p></noscript>
+<main class="workspace" id="builder">
+<form class="editor" id="editor" autocomplete="off">
+<h2>1. Add your wording</h2>
+<p class="note">All fields are optional, but a sign needs a title or a language line. Include only welcome information or assistance you can actually offer.</p>
+<div class="field"><label for="title">Title <small>Up to 60 characters.</small></label><input id="title" maxlength="60" dir="auto" placeholder="Your welcome title"></div>
+<div class="field"><label for="subtitle">Subtitle <small>Optional location or short instruction, up to 100 characters.</small></label><input id="subtitle" maxlength="100" dir="auto" placeholder="A short instruction your team has reviewed"></div>
+<label class="direction" for="heading-direction">Title and subtitle direction<select id="heading-direction"><option value="auto">Automatic</option><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label>
+<div class="section">
+<h2>2. Add up to three lines</h2>
+<p class="note">One reviewed phrase per field, up to 120 characters each. Leave unused fields empty. Direction controls reading order, not translation.</p>
+<div class="line-editor"><label for="line-1">Language line 1</label><input id="line-1" maxlength="120" dir="auto" placeholder="Paste your reviewed wording"><label class="direction" for="direction-1">Line 1 reading direction<select id="direction-1"><option value="auto">Automatic</option><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label></div>
+<div class="line-editor"><label for="line-2">Language line 2</label><input id="line-2" maxlength="120" dir="auto" placeholder="Optional second language"><label class="direction" for="direction-2">Line 2 reading direction<select id="direction-2"><option value="auto">Automatic</option><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label></div>
+<div class="line-editor"><label for="line-3">Language line 3</label><input id="line-3" maxlength="120" dir="auto" placeholder="Optional third language"><label class="direction" for="direction-3">Line 3 reading direction<select id="direction-3"><option value="auto">Automatic</option><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label></div>
+</div>
+<div class="section"><h2>3. Set the page and review</h2><div class="row"><label for="orientation">A4 orientation<select id="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label><label for="alignment">Text alignment<select id="alignment"><option value="center">Centered</option><option value="start">Reading-direction edge</option></select></label></div>
+<label class="review" for="reviewed"><input type="checkbox" id="reviewed"><span>Our team has reviewed the wording, reading direction, and actual welcome information. This records our own review; the builder cannot verify it.</span></label>
+<div class="actions"><button id="print" class="primary" type="button" disabled>Print sign</button><button id="download" type="button" disabled>Download HTML</button></div>
+<p class="note">Choose A4 in the print dialog. Turn browser headers and footers off and check the preview before printing. You can also choose “Save as PDF.”</p>
+<div class="example-actions"><button id="demo" type="button">Load fictional English demo</button><button id="clear" type="button">Clear wording</button></div>
+<p id="notice" role="status" aria-live="polite"></p></div>
+</form>
+<section aria-labelledby="preview-title"><div class="preview-head"><h2 id="preview-title">Your sign</h2><span id="paper-label">A4 · portrait · 210 × 297 mm</span></div>
+<div class="preview-stage"><article class="paper" id="paper" aria-label="Printable sign preview"><div class="sign-content" id="sign-content"></div></article><p id="fit-notice" role="status" aria-live="polite">Add wording to start your sign.</p></div>
+<p class="preview-note">Black text on white paper. Font size adapts to fit; the preview is scaled to your screen. Check the printed sign at its intended viewing distance. Long text is usually clearer as a separate handout.</p>
+</section>
+</main>
+<footer class="screen-only"><h2>Before you put the sign up</h2><p>Ask people which language and format help them. Have a competent speaker review each phrase, then check the printed result together. A welcome sign should not promise interpretation, translated material, or other support that is unavailable.</p><h2>References and next steps</h2><ul><li>The PewTranslate <a href="https://pewtranslate.com/en/guides/welcoming-multilingual-visitors">guide to welcoming multilingual visitors</a> discusses signs, greeters, and follow-up. Confirm the support you offer before adapting any suggested message.</li><li>The <a href="https://pewtranslate.com/en/guides/languages-spoken-by-zip-code">Census language lookup by ZIP code</a> can help explore local home-language estimates. Area data does not tell you an individual visitor’s preferred language.</li></ul><p>Published by the PewTranslate project. Its live-translation accounts are closed; this standalone sign builder works without them. The demo uses fictional English wording only. No translations or ministry results are supplied or claimed.</p><p>MIT License · Copyright © 2026 szj2ys. Permission and warranty notice are included in this file and its README. External resources have their own terms.</p></footer>
+</div>
+<script>
+'use strict';
+/* MIT License — Copyright (c) 2026 szj2ys.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to inclusion of this copyright and permission notice in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+const $=id=>document.getElementById(id);
+const textIds=['title','subtitle','line-1','line-2','line-3'];
+let fictional=false, fits=true, frame;
+const direction=id=>['auto','ltr','rtl'].includes($(id).value)?$(id).value:'auto';
+const landscape=()=>$('orientation').value==='landscape';
+const hasWording=()=>['title','line-1','line-2','line-3'].some(id=>$(id).value.trim());
+function appendText(parent,tag,cls,text,dir='auto'){
+ if(!text.trim())return;
+ const el=document.createElement(tag);el.className=cls;el.textContent=text.trim();el.dir=dir;parent.append(el);
+}
+function updateActions(){
+ const ready=Boolean(hasWording()&&$('reviewed').checked&&fits);
+ $('print').disabled=!ready;$('download').disabled=!ready;
+ document.body.classList.toggle('print-blocked',!ready);
+}
+function fitText(){
+ const paper=$('paper'),content=$('sign-content');
+ paper.style.setProperty('--type-scale','1');
+ let scale=1;
+ const overflows=()=>{
+  const css=getComputedStyle(content),children=[...content.children];
+  const height=children.reduce((sum,el)=>sum+el.getBoundingClientRect().height,0)+Math.max(0,children.length-1)*parseFloat(css.rowGap)+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom);
+  return height>content.clientHeight+1||content.scrollWidth>content.clientWidth+1;
+ };
+ while(overflows()&&scale>.5){scale=Math.max(.5,Number((scale-.025).toFixed(3)));paper.style.setProperty('--type-scale',String(scale));}
+ fits=!overflows();
+ const message=!hasWording()?'Add a title or language line to start your sign.':!fits?'This wording is too long for one page. Shorten it before printing or downloading.':scale<.75?'Text has been reduced to fit. Consider shorter wording and check its printed size.':!$('reviewed').checked?'Review the wording and select the review checkbox to print or download.':'Ready for your final print-preview check.';
+ $('fit-notice').textContent=message;$('fit-notice').classList.toggle('warning',!fits||scale<.75);updateActions();
+}
+function render(){
+ $('paper').classList.toggle('landscape',landscape());
+ $('page-size').textContent='@page{size:A4 '+(landscape()?'landscape':'portrait')+';margin:0}';
+ $('paper-label').textContent=landscape()?'A4 · landscape · 297 × 210 mm':'A4 · portrait · 210 × 297 mm';
+ const content=$('sign-content');content.replaceChildren();content.style.textAlign=$('alignment').value==='start'?'start':'center';
+ appendText(content,'h1','sign-title',$('title').value,direction('heading-direction'));
+ appendText(content,'p','sign-subtitle',$('subtitle').value,direction('heading-direction'));
+ const lines=document.createElement('div');lines.className='sign-lines';
+ for(let i=1;i<=3;i++)appendText(lines,'p','sign-line',$('line-'+i).value,direction('direction-'+i));
+ if(lines.children.length)content.append(lines);
+ if(fictional)appendText(content,'p','demo-label','Fictional English example — replace with your own reviewed wording.','ltr');
+ if(!hasWording())appendText(content,'p','sign-empty','Your sign will appear here.','ltr');
+ cancelAnimationFrame(frame);frame=requestAnimationFrame(fitText);
+}
+$('editor').addEventListener('submit',e=>e.preventDefault());
+$('editor').addEventListener('input',e=>{
+ if(e.target.id!=='reviewed'){$('reviewed').checked=false;$('notice').textContent='Wording or layout changed. Please review the updated sign.';}
+ render();
+});
+$('editor').addEventListener('change',e=>{if(e.target.tagName==='SELECT')render();});
+function replaceAllowed(){return !textIds.some(id=>$(id).value.trim())||confirm('Replace your current wording? Download it first if you want to keep it.');}
+$('demo').addEventListener('click',()=>{
+ if(!replaceAllowed())return;
+ ['Welcome','Fictional example for a welcome table','Please ask the welcome team for help.','You are welcome to sit here.','Thank you for joining us.'].forEach((v,i)=>$(textIds[i]).value=v);
+ ['heading-direction','direction-1','direction-2','direction-3'].forEach(id=>$(id).value='ltr');
+ fictional=true;$('reviewed').checked=false;$('notice').textContent='Fictional English demo loaded. The example label remains on any exported or printed copy. Clear wording to start your own sign.';render();$('title').focus();
+});
+$('clear').addEventListener('click',()=>{
+ if(!replaceAllowed())return;
+ textIds.forEach(id=>$(id).value='');['heading-direction','direction-1','direction-2','direction-3'].forEach(id=>$(id).value='auto');
+ fictional=false;$('reviewed').checked=false;$('notice').textContent='Wording cleared. Nothing was saved.';render();$('title').focus();
+});
+function escapeHTML(text){return String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function exportHTML(){
+ const paper=$('paper').cloneNode(true);paper.removeAttribute('id');paper.removeAttribute('aria-label');paper.querySelector('#sign-content').removeAttribute('id');
+ const orientation=landscape()?'landscape':'portrait';
+ const width=landscape()?'297mm':'210mm';
+ return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'"><title>'+escapeHTML($('title').value.trim()||'Welcome sign')+'</title><style>'+$('sign-styles').textContent+'\n@page{size:A4 '+orientation+';margin:0}body{margin:0;background:#e9ece7}.paper{width:'+width+';height:auto;max-width:calc(100% - 32px);margin:24px auto} .export-help{font:15px/1.5 system-ui,sans-serif;max-width:720px;margin:20px auto;padding:0 16px;color:#26372c}@media print{.export-help{display:none!important}.paper{max-width:none;margin:0!important}}</style></head><body><p class="export-help">Offline welcome sign. Use your browser’s Print command, choose A4 '+orientation+', turn off headers and footers, and check that the preview shows one page. This file contains your wording only; the builder did not translate or verify it.</p>'+paper.outerHTML+'</body></html>';
+}
+$('download').addEventListener('click',()=>{
+ fitText();if($('download').disabled)return;
+ const url=URL.createObjectURL(new Blob([exportHTML()],{type:'text/html;charset=utf-8'}));
+ const a=document.createElement('a');a.href=url;a.download='welcome-sign-'+(landscape()?'landscape':'portrait')+'.html';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $('notice').textContent='HTML downloaded. Open that file in a browser to print it offline. Your editor entries are still not saved here.';
+});
+$('print').addEventListener('click',()=>{fitText();if(!$('print').disabled)window.print();});
+window.addEventListener('beforeprint',fitText);
+window.addEventListener('afterprint',()=>requestAnimationFrame(fitText));
+window.addEventListener('resize',()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(fitText);});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compare two transcript excerpts locally. Inspect literal token differences, select their original positions, and download a reproducible JSON handoff.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Literal Transcript Alignment Reviewer</title>
+<style>
+:root{color-scheme:light;--ink:#18372b;--muted:#435e50;--green:#17613e;--line:#b7cebf;--pale:#edf5ef;--error:#8b291e}*{box-sizing:border-box}body{margin:0;background:#f7faf7;color:var(--ink);font:17px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}main{max-width:1120px;margin:auto;padding:32px 24px 64px}h1{font-size:clamp(2rem,5vw,3.05rem);line-height:1.15;letter-spacing:-.03em;max-width:850px;margin:8px 0 18px}h2{font-size:1.45rem;line-height:1.3;margin:0 0 14px}h3{font-size:1rem;margin:0 0 10px}p{margin:10px 0 18px}a{color:#155a3a;text-underline-offset:3px}a:hover{text-decoration-thickness:2px}:focus-visible{outline:3px solid #9a5700;outline-offset:3px}.skip{position:absolute;left:16px;top:-100px;padding:12px;background:white;z-index:5}.skip:focus{top:10px}.eyebrow{font-size:.82rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--green)}.intro{max-width:840px}.notice{border-left:4px solid var(--green);padding:12px 16px;background:var(--pale);margin:20px 0}.panel{padding:24px;background:white;border:1px solid var(--line);border-radius:10px;margin:24px 0}.muted,small{color:var(--muted)}.editors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:20px}label{font-weight:700;display:block;margin-bottom:7px}textarea{display:block;width:100%;min-height:220px;resize:vertical;border:1px solid #718d7c;border-radius:5px;padding:12px;background:white;color:var(--ink);font:16px/1.5 ui-monospace,Consolas,monospace;direction:ltr;unicode-bidi:plaintext}textarea:focus{outline:3px solid #9a5700;outline-offset:2px}.editor-note{font-size:.88rem;margin:8px 0;min-height:2em}.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:18px}button{font:inherit;font-weight:650;min-height:46px;padding:9px 15px;border:1px solid var(--green);border-radius:5px;background:var(--green);color:white;cursor:pointer}.secondary{background:white;color:var(--green)}button:hover:not(:disabled){filter:brightness(.95)}button:disabled{background:#e6eee8;color:#586c60;border-color:#a9bcaf;cursor:not-allowed}#status{font-weight:650;overflow-wrap:anywhere;margin:18px 0 0}#status[data-error=true]{color:var(--error)}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:22px 0}.metrics>div{border-left:3px solid var(--line);padding-left:12px}.metrics dt{font-size:.85rem;color:var(--muted)}.metrics dd{font-size:1.2rem;font-weight:750;margin:3px 0;overflow-wrap:anywhere}.alignment{list-style:none;padding:0;margin:18px 0}.alignment>li{border-top:1px solid var(--line);padding:16px 0}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.token{min-width:0;background:#f3f7f4;border-radius:5px;padding:12px}.token-label{font-size:.85rem;font-weight:650;margin:0 0 6px}.literal{display:block;font:15px/1.6 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;direction:ltr;unicode-bidi:isolate;margin:6px 0 12px}.select-token{font-size:.86rem;padding:7px 10px}.gap{font-style:italic;color:var(--muted)}.op{font-weight:750}.difference .op{color:#704000}.row-number{font-weight:500;color:var(--muted)}details{margin:14px 0}summary{cursor:pointer;font-weight:650;padding:9px 0;min-height:44px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em;overflow-wrap:anywhere}ul,ol{padding-left:25px}li{margin:7px 0}footer{border-top:1px solid var(--line);margin-top:30px;padding-top:20px;font-size:.93rem}.license{display:inline-block;padding:10px 0;min-height:44px}[hidden]{display:none!important}@media(max-width:650px){main{padding:24px 16px 44px}.panel{padding:18px}.editors,.pair{grid-template-columns:1fr;gap:16px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.controls>button{flex:1 1 145px}.literal{font-size:15px}textarea{min-height:190px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#inputs-heading">Skip to transcript inputs</a>
+<main>
+<header class="intro">
+<div class="eyebrow">Offline text comparison</div>
+<h1>Literal Transcript Alignment Reviewer</h1>
+<p>Compare a reference transcript and an ASR draft for the <strong>same short segment</strong>. Find literal token differences, return to their exact source positions, and download a review handoff.</p>
+<p class="notice">Check the reference against the actual recording first. An outline, translation, or paraphrase is not a matching reference. This page processes text only: it cannot verify either transcript, recognize speech, or judge meaning, translation quality, intelligibility or service readiness.</p>
+</header>
+<section class="panel" aria-labelledby="inputs-heading">
+<h2 id="inputs-heading" tabindex="-1">1. Add the same segment on both sides</h2>
+<p id="token-rule">Tokens are runs separated only by ASCII space <code>U+0020</code> or <code>U+0009–U+000D</code> (tab, line feed, vertical tab, form feed, carriage return). Case, punctuation and all other code units stay literal. These tokens are not universal linguistic words.</p>
+<div class="editors">
+<div><label for="reference">Reference transcript</label><textarea id="reference" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="token-rule bounds editor-values" placeholder="Paste a transcript reviewed against the recording."></textarea><p id="reference-count" class="editor-note">0 UTF-16 units</p></div>
+<div><label for="draft">ASR draft transcript</label><textarea id="draft" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="token-rule bounds editor-values" placeholder="Paste the draft of that same segment."></textarea><p id="draft-count" class="editor-note">0 UTF-16 units</p></div>
+</div>
+<p id="bounds" class="muted">Per editor: at most <strong>32,000 UTF-16 units and 700 tokens</strong>. Combined: at most <strong>350,000 matrix cells</strong>, calculated as (reference tokens + 1) × (draft tokens + 1). Larger input is rejected in full; choose a shorter matching segment.</p>
+<div class="controls"><button id="compare" type="button">Compare transcripts</button><button id="demo" type="button" class="secondary">Load fictional example</button><button id="reset" type="button" class="secondary">Clear both texts</button></div>
+<p id="origin" class="muted">No example loaded. Supplied text is not verified by this page.</p>
+<p id="status" role="status" aria-live="polite">Add text or load the fictional example. Empty sides are allowed and reported explicitly.</p>
+<noscript><p>This local comparison requires JavaScript. No script or package is downloaded.</p></noscript>
+</section>
+<section id="results" class="panel" aria-labelledby="results-heading" hidden>
+<h2 id="results-heading" tabindex="-1">2. Review the literal alignment</h2>
+<p id="result-context"></p>
+<dl id="metrics" class="metrics"></dl>
+<p id="arithmetic"></p><p id="tie-note" class="notice"></p>
+<p>Substitution means two unlike tokens were paired; deletion means a reference token has no draft token; insertion means a draft token has no reference token. These describe this alignment, not verified mistakes. A small difference can change meaning; a large difference can reflect formatting or a faulty reference.</p>
+<p id="positions">Each position is a zero-based UTF-16 range <code>[start, end)</code> in its current editor. A gap is not a token. Previews use quoted ASCII escapes for non-ASCII and control code units so hidden or directional characters cannot alter the labels. Use Select to inspect the original token.</p>
+<p id="row-count" class="muted" role="status"></p>
+<ol id="alignment" class="alignment" aria-label="Aligned token pairs"></ol>
+<button id="more" class="secondary" type="button" hidden>Show next rows</button>
+<h2>3. Download the review handoff</h2>
+<p>The complete JSON includes both supplied texts, every token and alignment row, original ranges, counts, rules and limits. It is not a corrected transcript. Share the handoff only with people who should receive this text.</p>
+<button id="download" type="button" disabled>Download alignment JSON</button>
+<p id="download-status" class="muted" role="status"></p>
+</section>
+<section class="panel" aria-labelledby="rules-heading">
+<h2 id="rules-heading">Understand the comparison</h2>
+<details open><summary>Tokenization and original text</summary>
+<p>Consecutive separators create no empty tokens. Separator-only differences do not change the alignment or rate. Non-breaking spaces, zero-width spaces, hyphens, apostrophes, numbers and punctuation are not expanded, removed or normalized. Text without the listed separators becomes one token; this is not a segmenter for unspaced languages.</p>
+<p id="editor-values">The tool never rewrites either editor. Browsers can normalize pasted CRLF or CR line endings to LF. Positions and the exported text refer to the current editor values, not original file bytes or pre-paste text. Supplementary characters occupy two UTF-16 units; offsets are not grapheme or visible-letter counts. JSON escapes preserve even isolated surrogate units.</p>
+</details>
+<details open><summary>Costs, direction, ties and the rate</summary>
+<p>The alignment transforms reference tokens into draft tokens. An exact token match costs 0; substitution, deletion and insertion each cost 1. Dynamic programming minimizes the total cost over the complete accepted excerpt. It does not use time, speakers, semantic similarity or word importance.</p>
+<p>Backtracking starts at the end. When costs tie, prefer a diagonal pair (match or substitution), then deletion, then insertion. A tie notice means this chosen path encountered an alternative optimal predecessor. Other equally minimal alignments can assign different operations and positions; this deterministic path is not uniquely correct.</p>
+<p>Let N be reference tokens, H draft tokens, C exact matches, S substitutions, D deletions and I insertions. N = C + S + D; H = C + S + I; distance = S + D + I. The displayed <strong>literal token difference rate</strong> is 100 × distance ÷ N, rounded to two decimal places. It can exceed 100%. With N = 0 it is undefined, including when both sides are empty; counts remain available.</p>
+<p>This uses the familiar word-error-rate formula under this page's own literal tokenization and unit costs. It is not an accuracy percentage, model benchmark or NIST/SCLITE reproduction. SCLITE's documented default alignment weights are 0/3/3/4 for match/insertion/deletion/substitution, with additional scoring options. Comparing rates across different inputs or rules can mislead.</p>
+</details>
+<details><summary>Bounds, lifecycle and local processing</summary>
+<p>Unit and token limits are checked before allocating the matrix; its complete cell count is checked before computation. No truncated excerpt is reported as complete. Editing either side, clearing or loading an example invalidates previous results and export. Work yields between groups of rows; an obsolete run cannot publish a result after an edit.</p>
+<p>The page contains its own code and styles. No audio, network requests, analytics, cookies, persistent storage or external packages are used. Text stays in page memory until you clear, close or refresh it. A user-triggered JSON download saves supplied text on your device. Reference links navigate externally only when activated.</p>
+</details>
+<h2>Continue the human review</h2>
+<p>Return to the recording and resolve questionable wording with the speaker or reviewer. The PewTranslate <a id="pew-guide" href="https://pewtranslate.com/en/guides/check-sermon-transcript-translation-errors">guide to checking sermon transcript and translation errors</a> separates audio, source transcript, context and translation review. This utility cannot decide which stage caused a difference.</p>
+<p>Sources: the <a href="https://trec.nist.gov/pubs/trec9/sdrt9_slides/tsld017.htm">NIST ASR metric definition</a>, <a href="https://github.com/usnistgov/SCTK/blob/master/doc/sclite.htm">SCLITE alignment documentation</a> and <a href="https://docs.speechmatics.com/speech-to-text/accuracy-benchmarking">Speechmatics guidance on references and normalization</a> explain the broader evaluation context. They do not validate or endorse this implementation.</p>
+</section>
+<footer><p>Original AI-assisted code and material by the PewTranslate project. The example is fictional English text, not a recording, model output, field trial or approved translation. PewTranslate's live-translation accounts remain closed; this standalone reviewer does not use them.</p><a class="license" href="LICENSE">MIT License · Copyright 2026 szj2ys</a></footer>
+</main>
+<script>
+'use strict';
+const LIMITS = Object.freeze({editor_utf16_units:32000,tokens_per_editor:700,matrix_cells:350000,display_batch_rows:100});
+const RULES = Object.freeze({version:'1.0.0',separators:'U+0009 through U+000D, and U+0020 only',normalization:'None; case, punctuation and other code units remain exact. Separators are excluded from tokens.',offsets:'Zero-based UTF-16 [start,end), relative to current browser textarea values',direction:'Reference to draft',costs:{match:0,substitution:1,deletion:1,insertion:1},tie_policy:'Backtrack from the end; prefer diagonal (match/substitution), then deletion, then insertion',rate:'100 * (S + D + I) / N; null when N = 0',scope:'Literal token differences, not verified recognition errors, accuracy, semantic judgment or SCLITE equivalence'});
+const DEMO = Object.freeze({reference:'The meeting is not on Friday.\nBring the blue folder.',draft:'The meeting is on Friday.\nPlease bring the green folder.'});
+const $ = id => document.getElementById(id);
+let revision=0, current=null, shown=0, origin='user-supplied; not verified';
+function escaped(value){return JSON.stringify(value).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));}
+function units(){for(const id of ['reference','draft'])$(id+'-count').textContent=$(id).value.length.toLocaleString('en-US')+' UTF-16 units';}
+function status(message,error=false){$('status').textContent=message;$('status').dataset.error=String(error);}
+function invalidate(message){revision++;current=null;shown=0;$('results').hidden=true;$('alignment').replaceChildren();$('download').disabled=true;$('download-status').textContent='';$('compare').disabled=false;$('compare').removeAttribute('aria-busy');status(message);units();}
+function tokenize(text,label){
+ if(text.length>LIMITS.editor_utf16_units)throw new Error(label+' exceeds 32,000 UTF-16 units. Nothing was compared or truncated.');
+ const tokens=[];const regex=/[^\u0009-\u000d\u0020]+/g;let match;
+ while((match=regex.exec(text))!==null){if(tokens.length===LIMITS.tokens_per_editor)throw new Error(label+' exceeds 700 tokens. Nothing was compared or truncated.');tokens.push({text:match[0],start:match.index,end:match.index+match[0].length});}
+ return tokens;
+}
+async function align(reference,draft,isCurrent=()=>true){
+ const n=reference.length,h=draft.length,w=h+1,cells=(n+1)*w;
+ if(n>LIMITS.tokens_per_editor||h>LIMITS.tokens_per_editor)throw new Error('Token limit exceeded.');
+ if(cells>LIMITS.matrix_cells)throw new Error('The comparison needs '+cells.toLocaleString('en-US')+' matrix cells; the limit is 350,000. Nothing was compared or truncated. Choose a shorter matching segment.');
+ if(!isCurrent())return null;
+ const matrix=new Uint16Array(cells);
+ for(let j=0;j<=h;j++)matrix[j]=j;
+ for(let i=1;i<=n;i++){
+  const row=i*w,previous=row-w;matrix[row]=i;
+  for(let j=1;j<=h;j++)matrix[row+j]=Math.min(matrix[previous+j-1]+(reference[i-1].text===draft[j-1].text?0:1),matrix[previous+j]+1,matrix[row+j-1]+1);
+  if(i%32===0){await new Promise(resolve=>setTimeout(resolve,0));if(!isCurrent())return null;}
+ }
+ const rows=[];let i=n,j=h,ties=false;const counts={N:n,H:h,C:0,S:0,D:0,I:0};
+ while(i||j){
+  const score=matrix[i*w+j];const diagonal=i>0&&j>0&&matrix[(i-1)*w+j-1]+(reference[i-1].text===draft[j-1].text?0:1)===score;
+  const deletion=i>0&&matrix[(i-1)*w+j]+1===score;const insertion=j>0&&matrix[i*w+j-1]+1===score;
+  if(Number(diagonal)+Number(deletion)+Number(insertion)>1)ties=true;
+  if(diagonal){const same=reference[i-1].text===draft[j-1].text;counts[same?'C':'S']++;rows.push({operation:same?'match':'substitution',reference_index:i-1,draft_index:j-1});i--;j--;}
+  else if(deletion){counts.D++;rows.push({operation:'deletion',reference_index:i-1,draft_index:null});i--;}
+  else if(insertion){counts.I++;rows.push({operation:'insertion',reference_index:null,draft_index:j-1});j--;}
+  else throw new Error('Alignment could not be reconstructed. No report was produced.');
+ }
+ rows.reverse();const distance=counts.S+counts.D+counts.I;
+ if(distance!==matrix[n*w+h]||counts.N!==counts.C+counts.S+counts.D||counts.H!==counts.C+counts.S+counts.I)throw new Error('Count consistency failed. No report was produced.');
+ return {counts,distance,rate_percent:n===0?null:100*distance/n,alternate_optimal_predecessor_on_path:ties,matrix_cells:cells,rows};
+}
+function metric(label,value){const box=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;box.append(dt,dd);return box;}
+function selectToken(side,index){if(!current)return;const token=current.tokens[side][index],editor=$(side);editor.focus();editor.setSelectionRange(token.start,token.end);status('Selected '+side+' token '+(index+1)+' at ['+token.start+', '+token.end+'). The text is unchanged.');}
+function tokenCell(side,index){
+ const cell=document.createElement('div');cell.className='token';const label=document.createElement('p');label.className='token-label';label.textContent=side==='reference'?'Reference':'Draft';cell.append(label);
+ if(index===null){const gap=document.createElement('p');gap.className='gap';gap.textContent='Gap — no token on this side';cell.append(gap);return cell;}
+ const token=current.tokens[side][index],code=document.createElement('code'),button=document.createElement('button');code.className='literal';code.textContent=escaped(token.text);button.type='button';button.className='secondary select-token';button.dataset.side=side;button.dataset.index=String(index);button.textContent='Select '+(side==='reference'?'reference':'draft')+' token '+(index+1)+' · ['+token.start+', '+token.end+')';button.addEventListener('click',()=>selectToken(side,index));cell.append(code,button);return cell;
+}
+function moreRows(){
+ if(!current)return;const end=Math.min(shown+LIMITS.display_batch_rows,current.alignment.rows.length),fragment=document.createDocumentFragment();
+ for(let i=shown;i<end;i++){const row=current.alignment.rows[i],li=document.createElement('li'),heading=document.createElement('h3'),number=document.createElement('span'),operation=document.createElement('span'),pair=document.createElement('div');li.className=row.operation==='match'?'':'difference';li.dataset.row=String(i);number.className='row-number';number.textContent=String(i+1)+'. ';operation.className='op';operation.textContent=row.operation.charAt(0).toUpperCase()+row.operation.slice(1);heading.append(number,operation);pair.className='pair';pair.append(tokenCell('reference',row.reference_index),tokenCell('draft',row.draft_index));li.append(heading,pair);fragment.append(li);}
+ $('alignment').append(fragment);shown=end;const total=current.alignment.rows.length;$('row-count').textContent='Showing '+shown+' of '+total+' alignment rows. The download always includes all '+total+'.';$('more').hidden=shown>=total;$('more').textContent='Show next '+Math.min(LIMITS.display_batch_rows,total-shown)+' rows';
+}
+function render(){
+ const a=current.alignment,c=a.counts;$('metrics').replaceChildren(metric('Reference tokens · N',c.N),metric('Draft tokens · H',c.H),metric('Exact matches · C',c.C),metric('Substitutions · S',c.S),metric('Deletions · D',c.D),metric('Insertions · I',c.I),metric('Minimum edit distance',a.distance),metric('Literal difference rate',a.rate_percent===null?'Undefined (N = 0)':a.rate_percent.toFixed(2)+'%'));
+ $('result-context').textContent=(current.origin==='fictional English example'?'Fictional English example. ':'User-supplied text; not independently verified. ')+(c.N===0?'The reference contains no tokens. ':'')+(c.H===0?'The draft contains no tokens. ':'')+'All accepted editor values were included.';
+ $('arithmetic').textContent='N = '+c.C+' + '+c.S+' + '+c.D+' = '+c.N+'; H = '+c.C+' + '+c.S+' + '+c.I+' = '+c.H+'. Distance = '+c.S+' + '+c.D+' + '+c.I+' = '+a.distance+'.';
+ $('tie-note').textContent=a.alternate_optimal_predecessor_on_path?'More than one minimum-cost alignment is possible. This result uses the stated diagonal → deletion → insertion tie policy. Equally minimal paths may pair tokens differently; this is one reproducible path, not a unique interpretation.':'The chosen path encountered no equal-cost alternative predecessor. This does not establish that either transcript is correct.';
+ $('results').hidden=false;shown=0;$('alignment').replaceChildren();moreRows();$('download').disabled=false;$('results-heading').focus();
+}
+async function compare(){
+ invalidate('Checking bounds and comparing literal tokens…');const job=revision;const text={reference:$('reference').value,draft:$('draft').value};const sourceOrigin=origin;$('compare').disabled=true;$('compare').setAttribute('aria-busy','true');
+ try{const reference=tokenize(text.reference,'Reference'),draft=tokenize(text.draft,'Draft');const alignment=await align(reference,draft,()=>revision===job);if(!alignment||revision!==job)return;
+ current={format:'literal-transcript-alignment',format_version:1,rules:RULES,limits:LIMITS,origin:sourceOrigin,editor_values:text,tokens:{reference,draft},alignment,limitations:['Supplied reference is not verified against audio by this tool.','Literal token differences are not verified ASR errors, semantic accuracy, translation quality or intelligibility.','Separators are ignored for counting; no linguistic segmentation or normalization.','Offsets refer to browser editor values, not original file bytes.','Unit-cost alignment is not NIST/SCLITE-equivalent.','This report contains the complete supplied text; share deliberately.']};render();status('Comparison complete. Review the alignment and its limits before sharing.');
+ }catch(error){if(revision===job){current=null;$('results').hidden=true;$('download').disabled=true;status(error.message||'Comparison failed. No report was produced.',true);}}
+ finally{if(revision===job){$('compare').disabled=false;$('compare').removeAttribute('aria-busy');}}
+}
+for(const id of ['reference','draft'])$(id).addEventListener('input',()=>{origin='user-supplied; not verified';$('origin').textContent='User-supplied or edited text. This page cannot verify its source.';invalidate('Text changed. Previous alignment and export cleared; compare again.');});
+$('compare').addEventListener('click',compare);
+$('demo').addEventListener('click',()=>{if(($('reference').value||$('draft').value)&&!confirm('Replace both editor values with the fictional example?'))return;$('reference').value=DEMO.reference;$('draft').value=DEMO.draft;origin='fictional English example';$('origin').textContent='Fictional English example loaded. It is not a recording, ASR output or real event.';invalidate('Fictional example loaded. Choose Compare transcripts.');});
+$('reset').addEventListener('click',()=>{if(($('reference').value||$('draft').value)&&!confirm('Clear both texts and their alignment? This page keeps no saved copy.'))return;$('reference').value='';$('draft').value='';origin='user-supplied; not verified';$('origin').textContent='No example loaded. Supplied text is not verified by this page.';invalidate('Both texts and results cleared.');$('reference').focus();});
+$('more').addEventListener('click',moreRows);
+$('download').addEventListener('click',()=>{if(!current)return;const serialized=JSON.stringify(current,null,2).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'))+'\n';const url=URL.createObjectURL(new Blob([serialized],{type:'application/json;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='literal-transcript-alignment.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('download-status').textContent='Download requested: complete alignment JSON, including both supplied texts. Check the saved file before sharing.';});
+units();
+</script>
+</body>
+</html>

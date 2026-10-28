@@ -1,0 +1,367 @@
+{
+  "collection": "PewTranslate resources",
+  "kind": "unchanged distribution copies",
+  "resources": [
+    {
+      "slug": "multilingual-church-service-planner",
+      "title": "Service planning",
+      "description": "Build a service handoff with languages, support roles and confirmation status.",
+      "original_url": "https://szj2ys.github.io/multilingual-church-service-planner/",
+      "source_repo": "https://github.com/szj2ys/multilingual-church-service-planner",
+      "source_commit": "6944a96e0b903aa5f3bfe45ffb98f2629ee2dc8e",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "130e126c161ea396ef000fbbb489db1f541f5214658b1d3b695106466cae7ff4",
+          "bytes": 17678
+        }
+      ]
+    },
+    {
+      "slug": "multilingual-welcome-sign-builder",
+      "title": "Welcome signs",
+      "description": "Lay out your reviewed welcome text for printing or downloading.",
+      "original_url": "https://szj2ys.github.io/multilingual-welcome-sign-builder/",
+      "source_repo": "https://github.com/szj2ys/multilingual-welcome-sign-builder",
+      "source_commit": "60808998a53071d93f794264728ebb22bf9c7b57",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "e13d8ef8d64a87638a7365712367009c11a84d54578ef46a9db4e13175339165",
+          "bytes": 20854
+        },
+        {
+          "path": "README.md",
+          "sha256": "2cb785f0a1e4bc02400076626cca833cee9ee9458a302c030597f2ddf5aa257c",
+          "bytes": 4838
+        }
+      ]
+    },
+    {
+      "slug": "subtitle-review-checker",
+      "title": "Subtitle review",
+      "description": "Inspect supported SRT and WebVTT cues for timing and configurable review flags.",
+      "original_url": "https://szj2ys.github.io/subtitle-review-checker/",
+      "source_repo": "https://github.com/szj2ys/subtitle-review-checker",
+      "source_commit": "364a17e44551ac20099c664659f9a0bc6afdf502",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "f5134197e6b84b2480e91de1762a27b4f696dc44dade0e712a949bd1dcb80906",
+          "bytes": 30766
+        },
+        {
+          "path": "README.md",
+          "sha256": "95acdcbe6d5be114d808da63056b69b304b3bd739b2c13497f17d84eb18a6aa5",
+          "bytes": 7801
+        }
+      ]
+    },
+    {
+      "slug": "browser-locale-inspector",
+      "title": "Browser locale inspection",
+      "description": "Inspect batch language tags using explicitly named browser Intl services.",
+      "original_url": "https://szj2ys.github.io/browser-locale-inspector/",
+      "source_repo": "https://github.com/szj2ys/browser-locale-inspector",
+      "source_commit": "7881ead11532b4c9b5316c4356a1668fc02f16df",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "d540fb2905b35192fbcd8f56e63fd0c16bd2ac599d3acd2ade2c922acac5982a",
+          "bytes": 30342
+        },
+        {
+          "path": "README.md",
+          "sha256": "3976e71d2d828188c23cecccd147c63a92ac9ebca732ee7f702d6d8e61f1b5ef",
+          "bytes": 8413
+        }
+      ]
+    },
+    {
+      "slug": "unicode-text-inspector",
+      "title": "Unicode text inspection",
+      "description": "Locate code points, hidden controls and normalization differences in pasted text.",
+      "original_url": "https://szj2ys.github.io/unicode-text-inspector/",
+      "source_repo": "https://github.com/szj2ys/unicode-text-inspector",
+      "source_commit": "d5d3b7d242549e6ac90065db938de337dacad2ac",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "c6cc6aabfeca214c3eccaae9f0d2a0a3844d206ade79fb7204617a031c69219e",
+          "bytes": 26185
+        },
+        {
+          "path": "README.md",
+          "sha256": "5715c7d86a82726342d9774a53b8e5ca827bc2e0db025d9c3879bc60d478de86",
+          "bytes": 7721
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    },
+    {
+      "slug": "census-language-estimates-notebook",
+      "title": "Census estimate audit",
+      "description": "Read and reproduce a dated audit of two ACS home-language records.",
+      "original_url": "https://szj2ys.github.io/census-language-estimates-notebook/",
+      "source_repo": "https://github.com/szj2ys/census-language-estimates-notebook",
+      "source_commit": "38e678b7a2cc0f1b2dc6c24e4105121084bb0b16",
+      "files": [
+        {
+          "path": "audit.ipynb",
+          "sha256": "4a16e28ea07a376b7cca2f2d6d6749966e7f73278db0dbc672173e1d00c70ef4",
+          "bytes": 21023
+        },
+        {
+          "path": "README.md",
+          "sha256": "8372e0fe764827b81be7ea7e54b895002557dc7e6d837ff82abe5347075ee588",
+          "bytes": 6007
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        },
+        {
+          "path": "reproduce.py",
+          "sha256": "b50c7b0af70776a0f929e64e429cfc91426f74b1c35c590394ec9853712b97ad",
+          "bytes": 3141
+        },
+        {
+          "path": "provenance.json",
+          "sha256": "6e982aa2322faf383993bba7a0cf2ea5d090191aabd287659b107039c439dab8",
+          "bytes": 4989
+        },
+        {
+          "path": "data/c16001-two-geographies.dat",
+          "sha256": "e62f92cebfb814601585fdc73209fbd7973532c97b478d29e15f8b2e59a19c9b",
+          "bytes": 1555
+        },
+        {
+          "path": "data/c16001-table-shell.txt",
+          "sha256": "9b01f5adc2d75080839b98909c7cc38316ccdd5c331ad1ada673dda58e294a7d",
+          "bytes": 5582
+        },
+        {
+          "path": "data/county-48029.tsv",
+          "sha256": "1a128fa88f3b20efc0fd7187b321b8442dbd7bb0fa84e12e5bc2a1ccdae98d6c",
+          "bytes": 392
+        },
+        {
+          "path": "index.html",
+          "sha256": "ba4340ada34c47152eea5637e30ab39f634327ba220d4021e57059fecf671060",
+          "bytes": 60925
+        }
+      ],
+      "original_notebook_download_snapshot_commit": "3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2"
+    },
+    {
+      "slug": "glossary-csv-auditor",
+      "title": "Glossary CSV audit",
+      "description": "Map source and target columns, then export exact-string review findings.",
+      "original_url": "https://szj2ys.github.io/glossary-csv-auditor/",
+      "source_repo": "https://github.com/szj2ys/glossary-csv-auditor",
+      "source_commit": "a9155427579c3fde10b9e74b7ad361be9338587b",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "3694af74eb1ec2d06222d16e6f7097fcbd0f6a22d92aa4a10a75b1bfa380da29",
+          "bytes": 28547
+        },
+        {
+          "path": "README.md",
+          "sha256": "4c186bf2906153d4028da940f9a80d2ae0621a6be1b2978073caa7865d3d965b",
+          "bytes": 7748
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    },
+    {
+      "slug": "wav-audio-preflight",
+      "title": "WAV audio preflight",
+      "description": "Inspect a supported PCM16 WAV file and download per-channel measurements.",
+      "original_url": "https://szj2ys.github.io/wav-audio-preflight/",
+      "source_repo": "https://github.com/szj2ys/wav-audio-preflight",
+      "source_commit": "08371aec04c3b19dd355fe7e1013d0d100e34cfe",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "0bc44e6308dc9af706f1e2562d627a3265d72f71d8ceb2bafac3413b2aa03550",
+          "bytes": 27314
+        },
+        {
+          "path": "README.md",
+          "sha256": "d488da28fb0fec414433ff979ff290259ff65f925bd30ea02dd04621de6f49a5",
+          "bytes": 8915
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    },
+    {
+      "slug": "named-placeholder-review-tutorial",
+      "title": "Named placeholder review",
+      "description": "Run an offline Python recipe that compares named placeholders in text pairs.",
+      "original_url": "https://szj2ys.github.io/named-placeholder-review-tutorial/",
+      "source_repo": "https://github.com/szj2ys/named-placeholder-review-tutorial",
+      "source_commit": "7d95f542d6e083f4cfc1be2c8f8e10405bd9a7dc",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "846e9ef3b44ee8e89925d2cae718c157c2176697c66d51d1c6b8f7905094ec60",
+          "bytes": 12084
+        },
+        {
+          "path": "README.md",
+          "sha256": "b800ce4c4c4a25efe4650730bad8a5deb0f4b0406622cc427bbb6446a3152038",
+          "bytes": 1920
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        },
+        {
+          "path": "checker.py",
+          "sha256": "ddb39f46f40f8dc20d91ef6cba48fb446eee58a634d436b7fc2be6418967122b",
+          "bytes": 1950
+        }
+      ]
+    },
+    {
+      "slug": "asr-alignment-reviewer",
+      "title": "Transcript alignment review",
+      "description": "Compare a reference and draft transcript and export an exact alignment for review.",
+      "original_url": "https://szj2ys.github.io/asr-alignment-reviewer/",
+      "source_repo": "https://github.com/szj2ys/asr-alignment-reviewer",
+      "source_commit": "038fe9f0c5f9cd8a4cce906377750f8f1c0ffeb1",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "567e30f9777fc9b66739f7508a78d9b80bffbf90ce025a7164ec0c23f3f85d33",
+          "bytes": 24992
+        },
+        {
+          "path": "README.md",
+          "sha256": "92ba1a2dc45d31eb30f834adb50a1d15f66b3dee46ed48421f8eb025c00fa00b",
+          "bytes": 5845
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    },
+    {
+      "slug": "caption-display-rehearsal",
+      "title": "Caption display rehearsal",
+      "description": "Manually step through captions, compare layout observations and export a handoff.",
+      "original_url": "https://szj2ys.github.io/caption-display-rehearsal/",
+      "source_repo": "https://github.com/szj2ys/caption-display-rehearsal",
+      "source_commit": "b4f43b49a7171a5be799f2d40180a7af13dd52f9",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "caf3faa3e7ba4a9ab3b63814d32a6490811386713df051ae471885745d881e51",
+          "bytes": 26220
+        },
+        {
+          "path": "README.md",
+          "sha256": "fa016249ac19583bd6827ebeb655f0ca74b5a4095f7ae29fe1fef992e9ed1252",
+          "bytes": 6533
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    },
+    {
+      "slug": "wav-excerpt-kit",
+      "title": "WAV excerpt kit",
+      "description": "Create frame-exact PCM16 excerpts with a reusable recipe and source-frame manifest.",
+      "original_url": "https://szj2ys.github.io/wav-excerpt-kit/",
+      "source_repo": "https://github.com/szj2ys/wav-excerpt-kit",
+      "source_commit": "04fabdc4ad08ac56978f140ba9895df4716c481a",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "b53f75776a5570e4d1f60d54b24e39fcfce602333c220fa3b9d2eb7b87166811",
+          "bytes": 12214
+        },
+        {
+          "path": "README.md",
+          "sha256": "4f86fad609b7377322c8849115aa75f4e0d62054b45311934795ffc0deecae1f",
+          "bytes": 11801
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        },
+        {
+          "path": "wav_excerpt.py",
+          "sha256": "a79404988c42db5dbe2f8994a8ad5b7ec65e23496259e964016492cdc2541300",
+          "bytes": 14830
+        },
+        {
+          "path": "verify_packet.py",
+          "sha256": "33da80339fd9a145c4cb14424bdbfa0a7706675ff3a1c3cc01bb9b5f8d1fea82",
+          "bytes": 6839
+        },
+        {
+          "path": "example-ranges.json",
+          "sha256": "dc8776623eb300bd28f6e80863769765ca231e889087f89258388aa4c4923be8",
+          "bytes": 203
+        },
+        {
+          "path": "example-partition.json",
+          "sha256": "a2083b92d37830cba6fc0175b1182abc26949959c366a361153ed78ab29cb6ab",
+          "bytes": 150
+        },
+        {
+          "path": "wav-excerpt-kit.zip",
+          "sha256": "38e2953959e27fd125867e06e17a897e4a384f668c2b2e846df93408f109f204",
+          "bytes": 14439
+        }
+      ]
+    },
+    {
+      "slug": "bilingual-paragraph-review",
+      "title": "Bilingual paragraph review",
+      "description": "Freeze two texts, record human review groupings and export a portable review packet.",
+      "original_url": "https://szj2ys.github.io/bilingual-paragraph-review/",
+      "source_repo": "https://github.com/szj2ys/bilingual-paragraph-review",
+      "source_commit": "e5924ecb35618f10317d1aa83d8b87281ebd4983",
+      "files": [
+        {
+          "path": "index.html",
+          "sha256": "9e33982df8169920830fd3e6ea01ff0498f7d17dc2355b1aa2a2b893f29f328c",
+          "bytes": 39819
+        },
+        {
+          "path": "README.md",
+          "sha256": "f454c8e3e019cfc8406218953ee28588933edba1a56785062df67bcaaa3770f4",
+          "bytes": 6642
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "e465145dad879e22929d3bbb8f405f9045332c7d1f594d06c110979f9d66580d",
+          "bytes": 1063
+        }
+      ]
+    }
+  ]
+}

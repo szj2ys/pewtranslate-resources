@@ -1,0 +1,439 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'"><title>Audit two ACS home-language estimates — saved notebook</title><style>
+:root{color-scheme:light}*{box-sizing:border-box}html{font:16px/1.6 system-ui,sans-serif;color:#193b42;background:#f3f7f5}body{max-width:1000px;margin:0 auto;padding:24px}main{background:white;padding:30px;border:1px solid #b8cfca;border-radius:10px}h1,h2,h3{line-height:1.25;color:#164f3e}h1{font-size:2rem}h2{margin-top:2.3rem;font-size:1.5rem}a{color:#086850;text-decoration:underline;overflow-wrap:anywhere}p,li{overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:14px/1.55 ui-monospace,monospace;margin:0}code{font-family:ui-monospace,monospace}div.input{padding:16px;background:#f0f5f3;border-left:3px solid #5c9f88;margin:18px 0 10px}div.output{padding:16px;background:#f9fbfa;border:1px solid #d4e3dd;margin:10px 0 26px}.prompt{color:#59756c;font-size:12px;margin-bottom:8px}.anchor-link{display:none}.local{font-size:13px;color:#527267;margin-bottom:16px}.highlight .k,.highlight .kn{font-weight:bold;color:#124f95}.highlight .s,.highlight .s1,.highlight .s2{color:#765025}table{border-collapse:collapse}td,th{padding:8px;border:1px solid #bbcfc7}@media(max-width:600px){body{padding:12px}main{padding:16px}h1{font-size:1.75rem}pre{font-size:12px}div.input,div.output{padding:11px}h2{font-size:1.35rem}}
+
+.reader-header{margin:0 0 24px;padding:0 4px}.reader-header p{margin:0 0 12px}.reader-label{font-size:13px;font-weight:700;letter-spacing:.035em;text-transform:uppercase;color:#305e50}.reader-links{display:flex;align-items:center;flex-wrap:wrap;gap:10px 20px;margin:14px 0}.reader-links a{padding:8px 0;min-height:44px;display:inline-flex;align-items:center}.reader-links .reader-download{padding:10px 14px;background:#164f3e;color:white;border-radius:6px;font-weight:650}.reader-instructions{border-top:1px solid #b8cfca;padding-top:8px}.reader-instructions summary{padding:8px 0;min-height:44px;cursor:pointer;font-weight:600}.reader-instructions p{font-size:14px;margin:8px 0 12px}.reader-version code{overflow-wrap:anywhere}a:focus-visible,summary:focus-visible{outline:3px solid #b66a15;outline-offset:4px}@media(max-width:600px){.reader-header{padding:0 4px;margin-bottom:18px}.reader-links{gap:4px 16px}.reader-links .reader-download{width:100%;justify-content:center}}
+</style></head><body><header class="reader-header" aria-label="Notebook reader and downloads">
+<p class="reader-label">Static notebook reader · 28 October 2026</p>
+<p>Read the original explanations, Python code and saved outputs below. This page displays a frozen notebook; it does not run code or fetch data.</p>
+<nav class="reader-links" aria-label="Source and downloads">
+<a class="reader-download" href="https://github.com/szj2ys/census-language-estimates-notebook/archive/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2.zip">Download complete bundle (.zip)</a>
+<a href="https://raw.githubusercontent.com/szj2ys/census-language-estimates-notebook/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2/audit.ipynb" download="audit.ipynb">Notebook file (.ipynb)</a>
+<a href="https://github.com/szj2ys/census-language-estimates-notebook/tree/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2">Browse source files</a>
+<a href="#Audit-two-ACS-home-language-estimates">Read the notebook ↓</a>
+</nav>
+<details class="reader-instructions"><summary>How to reproduce the saved results</summary>
+<p>Download and extract the complete bundle, which includes the notebook, exact Census excerpts, provenance and runner. Open a terminal in the extracted folder and run <code>python reproduce.py</code> with Python 3.10 or newer. No additional packages, account or network connection are needed for that run. The notebook file alone is not the complete runnable project; if it opens as text, use your browser’s Save As command.</p>
+<p>The runner executes all six code cells sequentially and checks their output against the saved results. It is not an online notebook service or a Jupyter kernel. Read the <a href="https://github.com/szj2ys/census-language-estimates-notebook/blob/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2/README.md">full reproduction instructions and limitations</a> and <a href="https://raw.githubusercontent.com/szj2ys/census-language-estimates-notebook/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2/provenance.json">source provenance</a> before using the estimates.</p>
+<p class="reader-version">Source snapshot: <code>3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2</code>. The bundle is pinned to this original version; it excludes this reading page. Original code and explanatory text use the <a href="https://github.com/szj2ys/census-language-estimates-notebook/blob/3f66e95406908fe8ed3e1ca73d2023e1d86cbcf2/LICENSE">MIT licence</a>; Census source attribution is retained.</p>
+</details>
+</header><main><div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-00"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Audit-two-ACS-home-language-estimates">Audit two ACS home-language estimates<a class="anchor-link" href="#Audit-two-ACS-home-language-estimates">¶</a></h1><p>Follow a denominator, a language subgroup and their published margins of error from original Census fields to a transparent calculation. This notebook uses <strong>2020–2024 ACS five-year estimates</strong>, table C16001, for <strong>ZCTA 78201</strong> and <strong>Bexar County, Texas (48029)</strong>. These are two separate worked records, not a comparison or a combined service area.</p>
+<p><strong>Reader path:</strong> verify the bundled sources → identify each geography → inspect count fields and source margins → calculate a share using the same geography → exercise safeguards. Every code cell uses the Python standard library. Saved outputs are from an actual clean sequential run; rerun with <code>python reproduce.py</code> from a downloaded copy of this folder. No network, account or data upload is needed.</p>
+<p>The result is an audit trail, not a count of a church's visitors, an individual's language preference or evidence of translation accuracy.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-01"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Establish-the-snapshot">1. Establish the snapshot<a class="anchor-link" href="#1.-Establish-the-snapshot">¶</a></h2><p>The bundled <code>.dat</code> excerpt keeps the original header and <strong>all 77 fields</strong> of the two selected Census rows. The table-shell excerpt supplies the universe and 38 line labels; the county gazetteer supplies the county name. <code>provenance.json</code> records the source URLs, complete-file hashes, excerpt hashes, selected line numbers and actual retrieval times. Large original downloads are excluded from this publication.</p>
+<p>The survey period is <strong>January 2020 through December 2024</strong>, not a point-in-time 2024 census. Retrieval time and notebook execution time are separate metadata. <a href="https://www.census.gov/programs-surveys/acs/guidance/estimates.html">Census explains five-year estimates</a>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-02">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">ROUND_HALF_UP</span>
+
+<span class="n">BASE</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="n">provenance</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">BASE</span> <span class="o">/</span> <span class="s2">"provenance.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">provenance</span><span class="p">[</span><span class="s2">"files"</span><span class="p">]:</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">BASE</span> <span class="o">/</span> <span class="n">item</span><span class="p">[</span><span class="s2">"path"</span><span class="p">])</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">!=</span> <span class="n">item</span><span class="p">[</span><span class="s2">"sha256"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Bundled source changed: "</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s2">"path"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Hash verified:"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">"path"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Survey period:"</span><span class="p">,</span> <span class="n">provenance</span><span class="p">[</span><span class="s2">"survey_period"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Source retrieved (UTC):"</span><span class="p">,</span> <span class="n">provenance</span><span class="p">[</span><span class="s2">"files"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"retrieved_at"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Table universe:"</span><span class="p">,</span> <span class="n">provenance</span><span class="p">[</span><span class="s2">"universe"</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_table</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">):</span>
+    <span class="k">with</span> <span class="p">(</span><span class="n">BASE</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="kc">None</span> <span class="ow">in</span> <span class="n">row</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected row width: "</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">raw_rows</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="s2">"c16001-two-geographies.dat"</span><span class="p">,</span> <span class="s2">"|"</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_rows</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">77</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Expected two rows, each with GEO_ID plus 38 estimate/MOE pairs"</span><span class="p">)</span>
+<span class="n">by_geo</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="p">[</span><span class="s2">"GEO_ID"</span><span class="p">]:</span> <span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">raw_rows</span><span class="p">}</span>
+<span class="n">expected_geo</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"0500000US48029"</span><span class="p">,</span> <span class="s2">"860Z200US78201"</span><span class="p">}</span>
+<span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">by_geo</span><span class="p">)</span> <span class="o">!=</span> <span class="n">expected_geo</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">by_geo</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_rows</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Missing, duplicate or unexpected geography"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Original geography rows:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_rows</span><span class="p">),</span> <span class="s2">"| Fields per row:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Hash verified: data/c16001-two-geographies.dat
+Hash verified: data/c16001-table-shell.txt
+Hash verified: data/county-48029.tsv
+Survey period: 2020-2024
+Source retrieved (UTC): 2026-10-28T08:33:49.727717+00:00
+Table universe: Population 5 years and over
+Original geography rows: 2 | Fields per row: 77
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-03"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Keep-geographic-identities-intact">2. Keep geographic identities intact<a class="anchor-link" href="#2.-Keep-geographic-identities-intact">¶</a></h2><p><code>0500000US48029</code> is the county record; <code>860Z200US78201</code> is the ZCTA record. A <a href="https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html">ZCTA is a Census statistical representation</a>, not a USPS delivery route. The shared five-digit length does not make county FIPS and ZCTA codes interchangeable.</p>
+<p>No crosswalk or containment calculation is included. Do not sum these areas, subtract one from the other, or treat their difference as statistically significant. The code refuses a share with a numerator and denominator from different geography IDs.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-04">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">gazetteer</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="s2">"county-48029.tsv"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gazetteer</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">gazetteer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"GEOID"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"48029"</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"County gazetteer identity mismatch"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">gazetteer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"USPS"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"TX"</span> <span class="ow">or</span> <span class="n">gazetteer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"NAME"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"Bexar County"</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected county label"</span><span class="p">)</span>
+<span class="n">identities</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"0500000US48029"</span><span class="p">:</span> <span class="s2">"Bexar County, Texas | county FIPS 48029"</span><span class="p">,</span>
+    <span class="s2">"860Z200US78201"</span><span class="p">:</span> <span class="s2">"ZCTA 78201 | Census statistical area"</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">geo_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">identities</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">geo_id</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span> <span class="o">+</span> <span class="n">label</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"No relationship between these boundaries is inferred."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0500000US48029
+  Bexar County, Texas | county FIPS 48029
+860Z200US78201
+  ZCTA 78201 | Census statistical area
+No relationship between these boundaries is inferred.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-05"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Read-the-denominator-and-subgroup-hierarchy">3. Read the denominator and subgroup hierarchy<a class="anchor-link" href="#3.-Read-the-denominator-and-subgroup-hierarchy">¶</a></h2><p>This table covers <strong>people age five and over</strong>, not everyone in an area. The Spanish line counts the home-language group; it is not a count of people who require translation. Its two indented child lines describe reported English-speaking ability.</p>
+<p>The summary-file spelling <code>C16001_E003</code> corresponds to API variable <code>C16001_003E</code>; <code>M</code> marks the published margin. The <a href="https://api.census.gov/data/2024/acs/acs5/groups/C16001.html">official table metadata</a> and bundled table shell define the fields. A margin is in <strong>people</strong>, just like its count estimate. Census publishes these margins at the <strong>90% confidence level</strong> (<a href="https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf">2020–2024 accuracy guidance</a>).</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-06">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">shell</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="s2">"c16001-table-shell.txt"</span><span class="p">,</span> <span class="s2">"|"</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="p">[</span><span class="s2">"Unique ID"</span><span class="p">]:</span> <span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">shell</span><span class="p">}</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">38</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"Universe"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"Population 5 years and over"</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">shell</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected C16001 table shell"</span><span class="p">)</span>
+<span class="n">field_lines</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">field_lines</span><span class="p">:</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="sa">f</span><span class="s2">"C16001_</span><span class="si">{</span><span class="n">line</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="s2">"  "</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">"Indent"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">line</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">indent</span><span class="si">}{</span><span class="n">item</span><span class="p">[</span><span class="s1">'Label'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"E = count estimate; M = its published count margin of error."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>001 Total:
+002   Speak only English
+003   Spanish:
+004     Speak English "very well"
+005     Speak English less than "very well"
+E = count estimate; M = its published count margin of error.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-07"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-Preserve-missing-values-before-calculating">4. Preserve missing values before calculating<a class="anchor-link" href="#4.-Preserve-missing-values-before-calculating">¶</a></h2><p>ACS can publish annotations or special negative codes instead of numeric counts or margins. <a href="https://www.census.gov/data/developers/data-sets/acs-1year/notes-on-acs-estimate-and-annotation-values.html">Census documents these values</a>. This deliberately narrow parser accepts only nonnegative whole-number values for this count table. It preserves the original string and a reason for everything else. It does <strong>not</strong> replace missing values with zero or claim that all negative ACS variables are invalid—other tables can contain meaningful negative monetary values.</p>
+<p>The two genuine source rows are shown below. Synthetic sentinel examples appear later, clearly separate from source observations.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-08">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">count_value</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">""</span> <span class="k">if</span> <span class="n">raw</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">stripped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stripped</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"raw"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">:</span> <span class="s2">"missing/blank"</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"-[0-9]+"</span><span class="p">,</span> <span class="n">stripped</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"raw"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">:</span> <span class="s2">"negative code; retained, not a count"</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[0-9]+"</span><span class="p">,</span> <span class="n">stripped</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"raw"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">:</span> <span class="s2">"annotation or unexpected value; retained"</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"raw"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">stripped</span><span class="p">),</span> <span class="s2">"state"</span><span class="p">:</span> <span class="s2">"numeric"</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="s2">"E"</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">measure</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"E"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Use E for estimate or M for published count margin"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">count_value</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">"C16001_</span><span class="si">{</span><span class="n">measure</span><span class="si">}{</span><span class="n">line</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">"</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">shown</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"raw"</span><span class="p">])</span> <span class="o">+</span> <span class="s2">" ["</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="s2">"state"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"]"</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="k">for</span> <span class="n">geo_id</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">by_geo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">identities</span><span class="p">[</span><span class="n">geo_id</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">field_lines</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="sa">f</span><span class="s2">"C16001_</span><span class="si">{</span><span class="n">line</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">"</span><span class="p">][</span><span class="s2">"Label"</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">line</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"      Estimate:"</span><span class="p">,</span> <span class="n">shown</span><span class="p">(</span><span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">line</span><span class="p">)),</span> <span class="s2">"people"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"      Source MOE:"</span><span class="p">,</span> <span class="n">shown</span><span class="p">(</span><span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">)),</span> <span class="s2">"people (90%)"</span><span class="p">)</span>
+
+<span class="n">source_issues</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">[</span><span class="s2">"GEO_ID"</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">count_value</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="s2">"state"</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">raw_rows</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                 <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">"GEO_ID"</span> <span class="ow">and</span> <span class="n">count_value</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Non-numeric or missing values across all 152 source measures:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">source_issues</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">source_issues</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Bexar County, Texas | county FIPS 48029
+  001 Total:
+      Estimate: 1,934,539 people
+      Source MOE: 69 people (90%)
+  002 Speak only English
+      Estimate: 1,217,847 people
+      Source MOE: 8,835 people (90%)
+  003 Spanish:
+      Estimate: 634,387 people
+      Source MOE: 7,392 people (90%)
+  004 Speak English "very well"
+      Estimate: 441,069 people
+      Source MOE: 5,908 people (90%)
+  005 Speak English less than "very well"
+      Estimate: 193,318 people
+      Source MOE: 5,657 people (90%)
+
+ZCTA 78201 | Census statistical area
+  001 Total:
+      Estimate: 40,357 people
+      Source MOE: 2,667 people (90%)
+  002 Speak only English
+      Estimate: 17,476 people
+      Source MOE: 1,813 people (90%)
+  003 Spanish:
+      Estimate: 22,100 people
+      Source MOE: 1,920 people (90%)
+  004 Speak English "very well"
+      Estimate: 14,265 people
+      Source MOE: 1,410 people (90%)
+  005 Speak English less than "very well"
+      Estimate: 7,835 people
+      Source MOE: 916 people (90%)
+
+Non-numeric or missing values across all 152 source measures: 0
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-09"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-Calculate-one-point-estimate-share-per-geography">5. Calculate one point-estimate share per geography<a class="anchor-link" href="#5.-Calculate-one-point-estimate-share-per-geography">¶</a></h2><p>The numerator is the Spanish home-language estimate (line 003). The denominator is the age-five-and-over total (line 001), from the <strong>same</strong> row. The formula is <code>100 × numerator / denominator</code>, rounded to two decimal places. A second share uses the Spanish subgroup reporting English less than “very well” (line 005), divided by the Spanish total (line 003). Its denominator is explicitly different.</p>
+<p>These are descriptive <strong>point estimates only</strong>. This notebook derives <strong>no percentage margin of error, confidence interval, ranking or significance test</strong>. Dividing a count margin by the denominator would not account for the uncertainty in a ratio. The original margins stay alongside their original counts, not beside a calculated percentage.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-10">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">point_share</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span><span class="p">,</span> <span class="n">numerator_geo</span><span class="p">,</span> <span class="n">denominator_geo</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">numerator_geo</span> <span class="o">!=</span> <span class="n">denominator_geo</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Different geography IDs: a share requires the same source row"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numerator</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">denominator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">denominator</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Point shares require parsed integer counts"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">denominator</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">numerator</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">numerator</span> <span class="o">&gt;</span> <span class="n">denominator</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Counts do not define a valid part/whole share"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">denominator</span><span class="p">))</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span>
+        <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.01"</span><span class="p">),</span> <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">percent_text</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">"not calculated: a source count is missing"</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">% (point estimate only)"</span>
+
+<span class="n">audit</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">geo_id</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">by_geo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span>
+    <span class="n">spanish</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span>
+    <span class="n">very_well</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">4</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span>
+    <span class="n">less_very_well</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">5</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span>
+    <span class="n">share_total</span> <span class="o">=</span> <span class="n">point_share</span><span class="p">(</span><span class="n">spanish</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">geo_id</span><span class="p">,</span> <span class="n">geo_id</span><span class="p">)</span>
+    <span class="n">share_subgroup</span> <span class="o">=</span> <span class="n">point_share</span><span class="p">(</span><span class="n">less_very_well</span><span class="p">,</span> <span class="n">spanish</span><span class="p">,</span> <span class="n">geo_id</span><span class="p">,</span> <span class="n">geo_id</span><span class="p">)</span>
+    <span class="n">child_sum</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">(</span><span class="n">spanish</span><span class="p">,</span> <span class="n">very_well</span><span class="p">,</span> <span class="n">less_very_well</span><span class="p">)</span> <span class="k">else</span> <span class="n">very_well</span> <span class="o">+</span> <span class="n">less_very_well</span> <span class="o">==</span> <span class="n">spanish</span>
+    <span class="n">audit</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"geo_id"</span><span class="p">:</span><span class="n">geo_id</span><span class="p">,</span> <span class="s2">"spanish_share_age5plus"</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">share_total</span><span class="p">),</span>
+                  <span class="s2">"less_very_well_share_spanish"</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">share_subgroup</span><span class="p">),</span> <span class="s2">"children_sum_to_parent"</span><span class="p">:</span><span class="n">child_sum</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">identities</span><span class="p">[</span><span class="n">geo_id</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  Spanish / age 5+ total:"</span><span class="p">,</span> <span class="n">spanish</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"   "</span><span class="p">,</span> <span class="n">percent_text</span><span class="p">(</span><span class="n">share_total</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  English less than very well / Spanish group:"</span><span class="p">,</span> <span class="n">less_very_well</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span> <span class="n">spanish</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"   "</span><span class="p">,</span> <span class="n">percent_text</span><span class="p">(</span><span class="n">share_subgroup</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  Spanish children sum to their parent in this snapshot:"</span><span class="p">,</span> <span class="n">child_sum</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">No percentage MOE or cross-geography comparison was calculated."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Bexar County, Texas | county FIPS 48029
+  Spanish / age 5+ total: 634387 / 1934539
+    32.79% (point estimate only)
+  English less than very well / Spanish group: 193318 / 634387
+    30.47% (point estimate only)
+  Spanish children sum to their parent in this snapshot: True
+
+ZCTA 78201 | Census statistical area
+  Spanish / age 5+ total: 22100 / 40357
+    54.76% (point estimate only)
+  English less than very well / Spanish group: 7835 / 22100
+    35.45% (point estimate only)
+  Spanish children sum to their parent in this snapshot: True
+
+No percentage MOE or cross-geography comparison was calculated.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-11"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6.-Exercise-the-failure-cases">6. Exercise the failure cases<a class="anchor-link" href="#6.-Exercise-the-failure-cases">¶</a></h2><p>These <strong>synthetic checks are not Census observations</strong>. They make a sentinel, a zero and an incompatible denominator visibly behave differently. A zero count remains a real zero; a missing count does not become zero. A source margin can be missing while its estimate remains usable as a point estimate.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=cell-12">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">synthetic</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"-666666666"</span><span class="p">,</span> <span class="s2">"-555555555"</span><span class="p">,</span> <span class="s2">"*****"</span><span class="p">,</span> <span class="s2">"N"</span><span class="p">,</span> <span class="s2">"12.5"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">synthetic</span><span class="p">:</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">count_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="s2">"-&gt;"</span><span class="p">,</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">"value"</span><span class="p">],</span> <span class="s2">"|"</span><span class="p">,</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">"state"</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">count_value</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">count_value</span><span class="p">(</span><span class="n">v</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">synthetic</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="k">assert</span> <span class="n">point_share</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="k">assert</span> <span class="n">point_share</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">)</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.00"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">count_value</span><span class="p">(</span><span class="s2">"25"</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">25</span> <span class="ow">and</span> <span class="n">count_value</span><span class="p">(</span><span class="s2">"-555555555"</span><span class="p">)[</span><span class="s2">"value"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+
+<span class="n">guards</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"different geographies"</span><span class="p">,</span> <span class="p">(</span><span class="mi">22100</span><span class="p">,</span> <span class="mi">1934539</span><span class="p">,</span> <span class="s2">"860Z200US78201"</span><span class="p">,</span> <span class="s2">"0500000US48029"</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">"zero denominator"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">"part greater than whole"</span><span class="p">,</span> <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">"negative value"</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">)),</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">description</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">guards</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">point_share</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Guard passed:"</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="s2">"|"</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Guard failed: "</span> <span class="o">+</span> <span class="n">description</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Synthetic safeguards passed; original data were not modified."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>'0' -&gt; 0 | numeric
+'' -&gt; None | missing/blank
+'-666666666' -&gt; None | negative code; retained, not a count
+'-555555555' -&gt; None | negative code; retained, not a count
+'*****' -&gt; None | annotation or unexpected value; retained
+'N' -&gt; None | annotation or unexpected value; retained
+'12.5' -&gt; None | annotation or unexpected value; retained
+Guard passed: different geographies | Different geography IDs: a share requires the same source row
+Guard passed: zero denominator | Counts do not define a valid part/whole share
+Guard passed: part greater than whole | Counts do not define a valid part/whole share
+Guard passed: negative value | Counts do not define a valid part/whole share
+Synthetic safeguards passed; original data were not modified.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cell-13"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-this-audit-supports">What this audit supports<a class="anchor-link" href="#What-this-audit-supports">¶</a></h2><p>You can trace every displayed source estimate and count margin to an exact bundled row, verify the five-and-over denominator, and reproduce the two within-row shares. The child-sum check is an arithmetic observation about these records, not proof that the survey is error-free. Published margins describe sampling uncertainty; they do not remove nonsampling error.</p>
+<p>Area estimates cannot establish an individual's preference, a congregation's composition, translation demand, causality or product accuracy. The county and ZCTA need not share boundaries. Consult Census methodology before comparing estimates, combining geographies or calculating derived uncertainty.</p>
+<p>For an optional interactive way to explore these area-level groups, see <a href="https://pewtranslate.com/en/guides/languages-spoken-by-zip-code">PewTranslate's languages-spoken-by-ZIP-code lookup</a>. That page is an interface/reference, <strong>not the statistics source for this notebook</strong>. The underlying statistics here are directly retrieved Census material.</p>
+<p>Original notebook and AI-assisted code by <a href="https://pewtranslate.com/">PewTranslate</a>. Live-translation accounts are closed. This audit does not translate or imply a working production translation service, professional certification or Census endorsement.</p>
+<h3 id="Reproduce-or-obtain-a-fresh-snapshot">Reproduce or obtain a fresh snapshot<a class="anchor-link" href="#Reproduce-or-obtain-a-fresh-snapshot">¶</a></h3><p><code>python reproduce.py</code> runs every code cell unchanged in a new Python process, blocks network sockets, and compares the generated outputs with the saved outputs. It does not require Jupyter or write to the source files. In an existing Jupyter environment, select a Python 3 kernel and run all cells with this folder as the working directory.</p>
+<p>For a <strong>separate, optional network operation</strong>, download the three official source files listed in <code>provenance.json</code> into a new folder. Use the recorded row selectors and original headers to create a new snapshot; retain retrieval times and new hashes. Do not silently overwrite this dated evidence or assume that a fresh source hash must match. The <a href="https://www.census.gov/programs-surveys/acs/data/summary-file.html">Census table-based summary-file guide</a> describes the format. A new snapshot requires rerunning and reviewing the audit, not just changing its date.</p>
+<p>Original code and explanatory text: MIT, copyright 2026 szj2ys. Public Census source material retains its attribution; it is not relicensed as original code.</p>
+</div>
+</div>
+</div>
+</main></body></html>

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Review local SRT and WebVTT subtitle timing and plain-text readability. Find malformed cues, choose review thresholds, and export an actionable issue list.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Subtitle timing &amp; readability checker</title>
+<style>
+:root{color-scheme:light;--ink:#172e35;--muted:#496169;--paper:#f3f6f4;--line:#becdc7;--accent:#176047;--soft:#e8f3ec;--error:#9c2c24;--warning:#795600}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:#075c87;text-underline-offset:.18em}a:hover{text-decoration-thickness:2px}button,input,textarea,select{font:inherit}button,input,select,textarea,summary,a{touch-action:manipulation}button,input,select,textarea{max-width:100%}button{min-height:46px;padding:.6rem 1rem;border:1px solid var(--accent);border-radius:6px;background:white;color:var(--accent);font-weight:650;cursor:pointer}button:hover{background:var(--soft)}button.primary{background:var(--accent);color:#fff}button:disabled{opacity:.55;cursor:default}input,select,textarea{border:1px solid #7c9490;border-radius:5px;padding:.65rem;background:white;color:var(--ink);min-height:46px}input[type=checkbox]{width:21px;height:21px;min-height:21px;accent-color:var(--accent);flex:none}input[type=file]{width:100%;padding:.4rem}input::file-selector-button{min-height:40px;margin-right:.5rem}textarea{width:100%;min-height:280px;resize:vertical;font:16px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}textarea::placeholder{color:#657475}input[type=number],select{width:100%}:focus-visible{outline:3px solid #b55e14;outline-offset:3px}.skip{position:absolute;left:12px;top:-100px;padding:.5rem;background:#fff;z-index:5}.skip:focus{top:12px}main{max-width:1080px;margin:auto;padding:28px 18px 48px}header{max-width:820px;margin-bottom:24px}.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.13em;font-weight:750;color:var(--accent);margin:0 0 8px}h1{font-size:clamp(2rem,5vw,3rem);letter-spacing:-.035em;line-height:1.12;margin:0 0 18px}h2{font-size:1.4rem;line-height:1.3;margin:0 0 14px}h3{font-size:1.05rem;margin:18px 0 5px}p{margin:0 0 14px}.intro{font-size:1.08rem}.privacy{color:var(--muted);font-size:.94rem}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:22px}.steps{padding-left:1.4rem}.steps li{margin-bottom:.55rem}.form-grid{display:grid;gap:18px}.field label,.label{display:block;font-weight:650;margin-bottom:6px}.help{font-size:.9rem;color:var(--muted);margin:6px 0 0}.controls{display:grid;gap:14px;margin:18px 0}.check{display:flex;align-items:center;gap:.7rem;min-height:46px;margin-top:10px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.file-note{font-size:.9rem;overflow-wrap:anywhere;color:var(--muted);min-height:1.5em;margin:6px 0 16px}.notice{background:#f2f6f4;border-left:4px solid var(--accent);padding:14px 16px;margin:12px 0}.notice.problem{background:#fff5f1;border-color:var(--error)}.notice strong{display:block}.counts{color:var(--muted);font-size:.94rem;margin-top:7px}.demo{color:var(--warning);font-weight:650;margin-top:12px}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:6px;margin-top:16px}table{border-collapse:collapse;table-layout:fixed;width:100%}th,td{text-align:left;vertical-align:top;padding:13px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#eff4f1;font-size:.9rem}th:first-child{width:22%}th:nth-child(2){width:24%}td{font-size:.94rem}td small{display:block;color:var(--muted);margin-top:6px}.tag{font-size:.8rem;font-weight:750;text-transform:uppercase;letter-spacing:.03em}.tag.error{color:var(--error)}.tag.unsupported{color:var(--warning)}.tag.review{color:var(--accent)}.excerpt{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;max-height:8rem;overflow:auto;background:#f6f7f6;padding:8px}summary{cursor:pointer;min-height:44px;display:list-item;padding:8px 0;font-weight:650}details p,details li{font-size:.94rem}details ul{padding-left:1.3rem}.empty{color:var(--muted)}.foot{font-size:.9rem;color:var(--muted);margin-top:26px}.foot p{margin-bottom:8px}[hidden]{display:none!important}
+@media(min-width:700px){main{padding:42px 28px 56px}.panel{padding:26px}.controls{grid-template-columns:1fr 1fr 1fr}.form-grid{grid-template-columns:minmax(0,1fr) minmax(240px,.6fr);align-items:start}.file-field{max-width:520px}}
+@media(max-width:599px){.panel{padding:16px}table,caption,tbody,tr,td{display:block;width:100%}thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}tr{border-bottom:2px solid var(--line)}td{border:0;padding:10px 12px}td::before{content:attr(data-label);display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:5px}.table-wrap{overflow:visible}.actions button{flex:1 1 145px}.excerpt{max-height:10rem}}
+@media print{body{background:white;font-size:11pt}main{max-width:none;padding:0}header{margin-bottom:10px}h1{font-size:24pt}#input-panel,.actions,.skip,.foot,details{display:none!important}.panel{border:0;padding:0}th,td{font-size:10pt}.table-wrap{overflow:visible}.excerpt{max-height:none}tr{break-inside:avoid}.notice{background:white}a{color:inherit}}
+</style>
+</head>
+<body>
+<a class="skip" href="#input-panel">Skip to subtitle input</a>
+<main>
+<header>
+<p class="eyebrow">Local caption preparation</p>
+<h1>Subtitle timing &amp; readability checker</h1>
+<p class="intro">Find cues that need a second look before you publish a recorded talk. Open an SRT or WebVTT file, choose your review thresholds, and download a cue-by-cue issue list.</p>
+<p class="privacy">Your text stays in this page’s memory. No upload, account, analytics or connection is needed. Closing or refreshing the page clears it.</p>
+</header>
+<section class="panel" id="input-panel" aria-labelledby="input-heading" tabindex="-1">
+<h2 id="input-heading">1. Add your subtitles</h2>
+<div class="form-grid">
+<div class="field file-field"><label for="file">Open a local subtitle file</label><input type="file" id="file" accept=".srt,.vtt,text/plain,text/vtt" aria-describedby="file-help"><p id="file-help" class="help">UTF-8 SRT or WebVTT · up to 2 MiB, 5,000 blocks and 30,000 lines.</p></div>
+<div><button type="button" id="demo">Load fictional example</button><p class="help">An English practice file with timing, readability and syntax issues.</p></div>
+</div>
+<p id="file-note" class="file-note" role="status">No file selected. You can paste text below.</p>
+<div class="field"><label for="source">Or paste subtitle text</label><textarea id="source" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="source-help" placeholder="1&#10;00:00:01,000 --&gt; 00:00:04,000&#10;Your caption text here."></textarea><p class="help" id="source-help">Long lines scroll inside the editor. Analysis never changes this text or your file. This checker exports issues, not corrected subtitles.</p></div>
+<p id="demo-note" class="demo" hidden>Fictional English example — not a recording or a translation.</p>
+<form id="options">
+<h3>2. Choose review thresholds</h3>
+<p class="help">These are your preferences, not universal rules. An overlap can be intentional; reading comfort depends on language, audience and playback.</p>
+<div class="controls">
+<div class="field"><label for="format">Input format</label><select id="format"><option value="auto">Detect automatically</option><option value="srt">SRT</option><option value="vtt">WebVTT</option></select></div>
+<div class="field"><label for="max-line">Maximum characters per line</label><input type="number" id="max-line" min="8" max="200" step="1" value="42" required></div>
+<div class="field"><label for="max-cps">Maximum characters per second</label><input type="number" id="max-cps" min="1" max="100" step="0.5" value="20" required></div>
+</div>
+<label class="check" for="overlap"><input type="checkbox" id="overlap" checked>Flag overlapping cues for review</label>
+<div class="actions"><button class="primary" type="submit" id="analyze">Review subtitles</button><button type="button" id="clear">Clear text &amp; results</button></div>
+</form>
+</section>
+<section class="panel" id="results" aria-labelledby="results-heading">
+<h2 id="results-heading" tabindex="-1">3. Review the issue list</h2>
+<div id="status" class="notice" role="status" aria-live="polite"><strong>Ready when you are.</strong><span>Add subtitles above, then choose Review subtitles.</span></div>
+<p id="counts" class="counts"></p>
+<p id="result-context" class="help"></p>
+<div class="actions"><button type="button" id="download" disabled>Download issues CSV</button><button type="button" id="print" disabled>Print issue list</button></div>
+<p id="export-note" class="help" role="status"></p>
+<div id="issue-wrap" class="table-wrap" hidden><table><caption class="help" style="text-align:left;padding:10px">Issues in source order. Fix structural problems first, then review the suggested timing and text changes.</caption><thead><tr><th scope="col">Cue / source line</th><th scope="col">Time / category</th><th scope="col">What to review</th></tr></thead><tbody id="issues"></tbody></table></div>
+<p id="display-limit" class="help"></p>
+</section>
+<section class="panel" aria-labelledby="guide-heading">
+<h2 id="guide-heading">Make the next review useful</h2>
+<ol class="steps"><li><strong>Resolve parsing problems.</strong> An error or unsupported feature means this review is incomplete. Keep the original file and check it in your subtitle editor.</li><li><strong>Use the issue time to find the cue.</strong> Watch it with the surrounding video. Shorten or re-time a caption only after checking that the words and speaker still match.</li><li><strong>Check what numbers cannot.</strong> Confirm names, meaning, speaker identification and relevant sounds. Ask the intended audience whether the captions are usable.</li></ol>
+<p>For a content review alongside these timing checks, use PewTranslate’s <a href="https://pewtranslate.com/en/guides/check-sermon-transcript-translation-errors">guide to checking sermon transcript and translation errors</a>. It explains how to record uncertain wording and involve a competent language reviewer.</p>
+<details id="limits"><summary>Supported syntax, counting method and limits</summary>
+<p><strong>SRT:</strong> a numeric cue index, a timing line such as <code>00:01:02,345 --&gt; 00:01:05,678</code>, then plain text. Separate cues with blank lines. Hours have at least two digits; minutes and seconds run from 00 to 59.</p>
+<p><strong>WebVTT:</strong> a <code>WEBVTT</code> header, a blank line, optional single-line cue identifiers, timing with a decimal point (hours optional), and plain text. NOTE blocks are counted and skipped. This tool does not validate the whole WebVTT specification.</p>
+<p><strong>Reported as unsupported:</strong> STYLE, REGION, header metadata, cue settings, markup, entities and embedded timestamps. Text metrics are skipped for marked-up or structurally ambiguous cues. Unsupported features are not necessarily invalid subtitles. See the <a href="https://www.w3.org/TR/webvtt1/">W3C WebVTT specification</a> for the full format.</p>
+<p><strong>Counts:</strong> Unicode code points, including spaces and punctuation. Line breaks do not count toward characters per second. This is not a count of perceived letters, words or display width; emoji sequences and combining marks can count as several characters. Playback wrapping is not simulated. Reading rate is characters divided by cue duration.</p>
+<p><strong>Limits:</strong> 2 MiB of UTF-8 text, 5,000 blank-line-separated blocks and 30,000 lines. Files above a limit are rejected in full. At most 200 issue rows are displayed; CSV includes all issues from the accepted input. No media playback, translation, automatic repair or accessibility certification is provided.</p>
+<p><strong>CSV:</strong> every field is quoted; quotes and line breaks are escaped. Formula-like cells receive a leading apostrophe, including cells with leading spaces or controls. This intentionally changes those exported cells for safer spreadsheet use. Source text in the editor is untouched.</p>
+</details>
+</section>
+<footer class="foot"><p>An AI-assisted, free resource by <a href="https://pewtranslate.com/">PewTranslate</a>. Live-translation accounts are closed. This standalone local checker does not translate or connect to a translation service.</p><p>MIT licensed · <a href="README.md">Usage notes and license</a>. No external scripts, fonts or automatic network requests.</p></footer>
+</main>
+<script>
+'use strict';
+(() => {
+const $ = id => document.getElementById(id);
+const MAX_BYTES = 2 * 1024 * 1024, MAX_BLOCKS = 5000, MAX_LINES = 30000, DISPLAY_LIMIT = 200;
+let original = '', issues = [], loadVersion = 0, analyzed = false, fictional = false;
+const demo = '1\n00:00:01,000 --> 00:00:04,000\nWelcome to this fictional practice session.\n\n2\n00:00:03,500 --> 00:00:04,500\nThis deliberately long caption needs more time and a careful human review.\n\n3\n00:00:06,000 --> 00:00:05,000\nThis cue ends before it starts.\n\n4\n00:00:07,000 -> 00:00:09,000\nThis timing arrow is malformed.\n';
+function setStatus(title, body, problem = false) {
+  $('status').replaceChildren();
+  const strong = document.createElement('strong'), span = document.createElement('span');
+  strong.textContent = title; span.textContent = body;
+  $('status').append(strong, span); $('status').classList.toggle('problem', problem);
+}
+function invalidate(message = 'Input changed. Review it again.') {
+  issues = []; analyzed = false; $('download').disabled = true; $('print').disabled = true;
+  $('issue-wrap').hidden = true; $('issues').replaceChildren(); $('counts').textContent = '';
+  $('result-context').textContent = ''; $('display-limit').textContent = ''; $('export-note').textContent = '';
+  setStatus(message, 'Results are created only when you choose Review subtitles.');
+}
+function stamp(raw, format) {
+  const pattern = format === 'srt' ? /^(\d{2,}):([0-5]\d):([0-5]\d),(\d{3})$/ : /^(?:(\d{2,}):)?([0-5]\d):([0-5]\d)\.(\d{3})$/;
+  const m = raw.match(pattern);
+  if (!m) return null;
+  const ms = (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3])) * 1000 + Number(m[4]);
+  return Number.isSafeInteger(ms) ? ms : null;
+}
+function inspect(raw, options) {
+  const result = {issues: [], cues: [], format: options.format, notes: 0, blocks: 0};
+  let serial = 0;
+  function add(kind, cue, reason, action, code) {
+    result.issues.push({kind, cue: cue.id || 'File', line: cue.line || 1, start: cue.startText || '', end: cue.endText || '', reason, action, text: cue.text || '', code, order: serial++});
+  }
+  const file = {id: 'File', line: 1};
+  if (new TextEncoder().encode(raw).length > MAX_BYTES) {
+    add('Error', file, 'Input exceeds the 2 MiB limit. Nothing was analyzed.', 'Split a copy into smaller files in your subtitle editor.', 'size'); return result;
+  }
+  if (!raw.trim()) {add('Error', file, 'No subtitle text was provided.', 'Paste a subtitle or open a UTF-8 SRT/WebVTT file.', 'empty'); return result;}
+  const lines = raw.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
+  if (lines.length > MAX_LINES) {add('Error', file, 'Input exceeds 30,000 lines. Nothing was analyzed.', 'Split a copy into smaller files.', 'lines'); return result;}
+  const hasHeader = /^WEBVTT(?:[ \t].*)?$/.test(lines[0]);
+  result.format = options.format === 'auto' ? (hasHeader ? 'vtt' : 'srt') : options.format;
+  if (raw.includes('\uFFFD') || /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(raw)) {
+    add('Error', file, 'Replacement or unsupported control characters are present.', 'Reopen the original in a text editor and export as UTF-8; check affected wording.', 'encoding');
+  }
+  let offset = 0;
+  if (result.format === 'vtt') {
+    if (!hasHeader) add('Error', file, 'WebVTT requires a WEBVTT header on the first line.', 'Check the selected format and restore the header in your subtitle editor.', 'header');
+    else {
+      offset = 1;
+      if (lines[0].includes('-->')) add('Error', file, 'The WebVTT header contains a timing arrow.', 'Put cue timings after the header and a blank line.', 'header');
+      if (lines[1] !== undefined && lines[1].trim() !== '') {
+        add('Error', file, 'The WebVTT header is not followed by a blank line.', 'Separate the header from cues; review any header metadata separately.', 'header-gap');
+      }
+    }
+  } else if (hasHeader) {
+    add('Error', file, 'WEBVTT header found while SRT is selected.', 'Choose WebVTT or automatic detection and review again.', 'format');
+  } else if (options.format === 'auto' && /\d{2}:\d{2}\.\d{3}[ \t]+-->/.test(raw)) {
+    add('Error', file, 'WebVTT-style timing found without a WEBVTT header.', 'Check the source format; restore its header or select WebVTT to inspect the remaining cues.', 'format');
+  }
+  const blocks = []; let block = null;
+  for (let n = offset; n < lines.length; n++) {
+    if (lines[n].trim() === '') {if (block) {blocks.push(block); block = null;}}
+    else {if (!block) block = {line: n + 1, lines: []}; block.lines.push(lines[n]);}
+  }
+  if (block) blocks.push(block);
+  if (blocks.length > MAX_BLOCKS) {add('Error', file, 'Input exceeds 5,000 blocks. Nothing was analyzed.', 'Split a copy into smaller files.', 'blocks'); return result;}
+  result.blocks = blocks.length;
+  let previousStart = -1;
+  for (let n = 0; n < blocks.length; n++) {
+    const b = blocks[n], first = b.lines[0], cue = {id: 'Block ' + (n + 1), line: b.line, text: b.lines.join('\n')};
+    if (result.format === 'vtt' && /^NOTE(?:[ \t]|$)/.test(first)) {
+      result.notes++;
+      if (b.lines.some(line => line.includes('-->'))) add('Unsupported', cue, 'A NOTE block contains a timing arrow; it was not parsed as a cue.', 'Check whether a missing blank line put a cue inside this comment.', 'note-arrow');
+      continue;
+    }
+    if (result.format === 'vtt' && /^(?:STYLE|REGION)(?:[ \t]|$)/.test(first)) {
+      add('Unsupported', cue, 'WebVTT style or region section is outside this checker’s supported subset.', 'Inspect the section in a WebVTT-aware editor; it is not certified by this review.', 'section'); continue;
+    }
+    let timingIndex = first.includes('-->') ? 0 : 1;
+    const timing = b.lines[timingIndex];
+    if (!timing || !timing.includes('-->')) {
+      add('Error', cue, 'No supported timing line was found in this block.', 'Use a cue index/identifier, a start --> end timing line, text, and a blank separator. Check for unsupported header metadata.', 'timing-missing'); continue;
+    }
+    cue.id = timingIndex === 1 ? first : 'Cue at line ' + b.line;
+    if (result.format === 'srt' && (timingIndex !== 1 || !/^\d+$/.test(first))) {
+      add('Error', cue, 'SRT cue index is missing or is not numeric.', 'Restore a numeric index before the timing line.', 'index');
+    }
+    const match = timing.match(/^([^ \t]+)[ \t]+-->[ \t]+([^ \t]+)(?:[ \t]+(.*))?$/);
+    if (!match) {add('Error', cue, 'Malformed timing line.', 'Use one start time, spaces around -->, and one end time.', 'timing-syntax'); continue;}
+    cue.startText = match[1]; cue.endText = match[2];
+    cue.start = stamp(match[1], result.format); cue.end = stamp(match[2], result.format);
+    cue.text = b.lines.slice(timingIndex + 1).join('\n');
+    if (cue.start === null || cue.end === null) {
+      add('Error', cue, 'Timestamp is invalid or unsupported for ' + (result.format === 'srt' ? 'SRT (HH:MM:SS,mmm).' : 'WebVTT (MM:SS.mmm or HH:MM:SS.mmm).'), 'Check separators, three millisecond digits and minute/second ranges (00–59).', 'timestamp'); continue;
+    }
+    if (cue.end <= cue.start) {add('Error', cue, 'Cue end is not later than its start.', 'Check both times against the recording. Reading rate was not calculated.', 'duration'); continue;}
+    result.cues.push(cue);
+    if (cue.start < previousStart) add('Review', cue, 'Cue start is earlier than the preceding parsed cue.', 'Check source ordering and intentional simultaneous captions.', 'order');
+    previousStart = cue.start;
+    if (match[3]) add('Unsupported', cue, 'Timing settings or trailing timing data are not validated.', 'Check positioning/settings in a subtitle editor; this tool only reads the two timestamps.', 'settings');
+    if (!cue.text.trim()) {add('Error', cue, 'Cue has no subtitle text.', 'Restore the intended text or remove the empty cue in your editor.', 'text-empty'); continue;}
+    if (cue.text.includes('-->')) {add('Error', cue, 'Another timing arrow appears inside this cue’s text.', 'Check for a missing blank line between cues. Text metrics were skipped.', 'separator'); continue;}
+    if (/[<>]|&(?:#\d+|#x[\da-f]+|[a-z][\w]*);/i.test(cue.text)) {
+      add('Unsupported', cue, 'Markup, an entity or angle-bracket text is present. Text metrics were skipped.', 'Inspect the rendered cue in a subtitle editor; markup is never executed here.', 'markup'); continue;
+    }
+    const lengths = cue.text.split('\n').map(line => Array.from(line).length);
+    const longest = Math.max(...lengths), characters = lengths.reduce((sum, length) => sum + length, 0);
+    if (longest > options.maxLine) add('Review', cue, 'Longest line: ' + longest + ' characters (your limit: ' + options.maxLine + ').', 'Review phrasing or a natural line break while watching the video; do not remove meaning just to meet a number.', 'line-length');
+    const cps = characters / ((cue.end - cue.start) / 1000);
+    if (cps > options.maxCps) add('Review', cue, 'Reading rate: ' + cps.toFixed(1) + ' characters/second (your limit: ' + options.maxCps + ').', 'Check whether the audience has time to read. Consider a longer duration or reviewed shorter wording.', 'rate');
+  }
+  if (options.overlap) {
+    let active = null;
+    for (const cue of [...result.cues].sort((a, b) => a.start - b.start || a.line - b.line)) {
+      if (active && cue.start < active.end) add('Review', cue, 'Overlaps cue “' + active.id + '” by ' + ((Math.min(active.end, cue.end) - cue.start) / 1000).toFixed(3) + ' seconds.', 'Check simultaneous speakers and screen placement. Keep the overlap if it is intentional and readable.', 'overlap');
+      if (!active || cue.end > active.end) active = cue;
+    }
+  }
+  if (!result.cues.length) add('Error', file, 'No cues with a positive, supported time interval were found.', 'Resolve format/timing problems before relying on this review.', 'no-cues');
+  result.issues.sort((a, b) => a.line - b.line || a.order - b.order);
+  return result;
+}
+function cell(text) {
+  let value = String(text ?? '');
+  if (/^[\s\u0000-\u001f\u007f]*[=+\-@]/u.test(value) || /^[\t\r\n]/.test(value)) value = "'" + value;
+  return '"' + value.replace(/"/g, '""') + '"';
+}
+function csv(rows) {
+  return '\uFEFF' + [['Category','Cue','Source line','Start','End','Issue','Suggested next action','Original cue text'], ...rows.map(i => [i.kind,i.cue,i.line,i.start,i.end,i.reason,i.action,i.text])].map(row => row.map(cell).join(',')).join('\r\n') + '\r\n';
+}
+function render(result, options) {
+  issues = result.issues; analyzed = true;
+  const errors = issues.filter(i => i.kind === 'Error').length, unsupported = issues.filter(i => i.kind === 'Unsupported').length, reviews = issues.filter(i => i.kind === 'Review').length;
+  if (errors || unsupported) setStatus('Review incomplete: resolve errors and unsupported features.', 'The supported cues may still have useful review flags. This result cannot establish that the subtitle file is valid or ready to publish.', true);
+  else if (reviews) setStatus('Review flags found.', 'These are prompts for human review, not automatic failures. Watch the corresponding cues before changing them.');
+  else setStatus('No issues found within the supported checks.', 'This is not an accuracy, accessibility or standards-compliance judgment. Watch the captions and review their content.');
+  $('counts').textContent = result.cues.length + ' timed cues · ' + errors + ' errors · ' + unsupported + ' unsupported features · ' + reviews + ' review flags · ' + result.notes + ' NOTE blocks skipped';
+  $('result-context').textContent = (fictional ? 'Fictional English example. ' : '') + 'Format: ' + (result.format === 'vtt' ? 'WebVTT' : result.format === 'srt' ? 'SRT' : 'undetermined') + '. Limits: ' + options.maxLine + ' characters/line, ' + options.maxCps + ' characters/second. Overlap flags ' + (options.overlap ? 'on.' : 'off.');
+  $('issues').replaceChildren();
+  for (const issue of issues.slice(0, DISPLAY_LIMIT)) {
+    const tr = document.createElement('tr'), a = document.createElement('td'), b = document.createElement('td'), c = document.createElement('td');
+    a.dataset.label = 'Cue / source line'; b.dataset.label = 'Time / category'; c.dataset.label = 'What to review';
+    a.textContent = issue.cue; const line = document.createElement('small'); line.textContent = 'Source line ' + issue.line; a.append(line);
+    const kind = document.createElement('span'); kind.className = 'tag ' + issue.kind.toLowerCase(); kind.textContent = issue.kind; b.append(kind);
+    const time = document.createElement('small'); time.textContent = issue.start ? issue.start + ' → ' + issue.end : 'Time unavailable'; b.append(time);
+    const reason = document.createElement('strong'), action = document.createElement('p'); reason.textContent = issue.reason; action.textContent = issue.action; c.append(reason, action);
+    if (issue.text) {const excerpt = document.createElement('pre'); excerpt.className = 'excerpt'; excerpt.textContent = issue.text.length > 600 ? issue.text.slice(0, 600) + '\n[Preview shortened; CSV includes this complete cue text.]' : issue.text; c.append(excerpt);}
+    tr.append(a,b,c); $('issues').append(tr);
+  }
+  $('issue-wrap').hidden = !issues.length; $('download').disabled = !issues.length; $('print').disabled = false;
+  $('display-limit').textContent = issues.length > DISPLAY_LIMIT ? 'Showing the first ' + DISPLAY_LIMIT + ' of ' + issues.length + ' issues. Download CSV for the complete list.' : '';
+  $('export-note').textContent = ''; $('results-heading').focus();
+}
+$('options').addEventListener('submit', event => {
+  event.preventDefault();
+  if (!$('options').reportValidity()) return;
+  const options = {format: $('format').value, maxLine: Number($('max-line').value), maxCps: Number($('max-cps').value), overlap: $('overlap').checked};
+  render(inspect(original, options), options);
+});
+$('source').addEventListener('input', () => {loadVersion++; original = $('source').value; fictional = false; $('demo-note').hidden = true; $('file').value = ''; $('file-note').textContent = 'Pasted or edited text. No source file is changed.'; invalidate();});
+$('source').addEventListener('paste', event => {
+  if (!event.clipboardData) return;
+  const field = $('source'), next = field.value.slice(0, field.selectionStart) + event.clipboardData.getData('text/plain') + field.value.slice(field.selectionEnd);
+  if (new TextEncoder().encode(next).length > MAX_BYTES) {
+    event.preventDefault(); invalidate();
+    setStatus('Paste was not inserted.', 'It would exceed the 2 MiB limit. Split a copy into smaller files. Previous editor text is unchanged.', true);
+    $('file-note').textContent = 'Paste rejected: it would exceed 2 MiB. Previous editor text is unchanged.';
+  }
+});
+for (const id of ['format','max-line','max-cps','overlap']) $(id).addEventListener('input', () => {if (analyzed) invalidate('Settings changed. Review the same text again.');});
+$('demo').addEventListener('click', () => {
+  loadVersion++; original = demo; $('source').value = demo; $('file').value = ''; fictional = true; $('demo-note').hidden = false;
+  $('format').value = 'auto'; $('file-note').textContent = 'Fictional English practice file loaded.'; invalidate('Example loaded. Choose Review subtitles.'); $('source').focus(); $('source').setSelectionRange(0, 0); $('source').scrollTop = 0;
+});
+$('clear').addEventListener('click', () => {
+  loadVersion++; original = ''; fictional = false; $('source').value = ''; $('file').value = ''; $('demo-note').hidden = true;
+  $('file-note').textContent = 'Text cleared. Nothing is stored by this page.'; invalidate('Text and results cleared.'); $('source').focus();
+});
+$('file').addEventListener('change', async () => {
+  const file = $('file').files[0]; if (!file) return;
+  const version = ++loadVersion;
+  invalidate('Opening the selected file…');
+  try {
+    if (file.size > MAX_BYTES) throw new Error('File exceeds 2 MiB. Split a copy into smaller files.');
+    const buffer = await file.arrayBuffer(); if (version !== loadVersion) return;
+    const bytes = new Uint8Array(buffer);
+    if ((bytes[0] === 0xff && bytes[1] === 0xfe) || (bytes[0] === 0xfe && bytes[1] === 0xff)) throw new Error('UTF-16 is unsupported. Export a copy as UTF-8.');
+    let text; try {text = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true}).decode(bytes);} catch {throw new Error('This file is not valid UTF-8. Export a UTF-8 copy from your subtitle editor.');}
+    original = text; $('source').value = text; fictional = false; $('demo-note').hidden = true;
+    $('file-note').textContent = file.name + ' opened locally (' + file.size.toLocaleString() + ' bytes). Choose Review subtitles.';
+    setStatus('File opened locally.', 'Choose Review subtitles. No file is uploaded or overwritten.');
+  } catch (error) {
+    if (version !== loadVersion) return;
+    $('file-note').textContent = error.message + ' Any previous text is still in the editor.';
+    setStatus('File was not loaded.', error.message + ' Previous text has not been analyzed again.', true); $('file').value = '';
+  }
+});
+$('download').addEventListener('click', () => {
+  if (!analyzed || !issues.length) return;
+  const url = URL.createObjectURL(new Blob([csv(issues)], {type: 'text/csv;charset=utf-8'})), a = document.createElement('a');
+  a.href = url; a.download = 'subtitle-review-issues.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  $('export-note').textContent = 'Issue CSV downloaded. Formula-like cells have a protective apostrophe. Your original subtitle is unchanged.';
+});
+$('print').addEventListener('click', () => {if (analyzed) window.print();});
+})();
+</script>
+</body>
+</html>
